@@ -16,11 +16,27 @@ package au.org.democracydevelopers.raire;
 public abstract class RaireException extends Exception {
     public static class InvalidTimeout extends RaireException {}
     public static class TimeoutCheckingWinner extends RaireException {}
-    public static class TimeoutFindingAssertions extends RaireException { double difficultyAtTimeOfStopping; }
+    public static class TimeoutFindingAssertions extends RaireException { final double difficultyAtTimeOfStopping;
+        public TimeoutFindingAssertions(double difficultyAtTimeOfStopping) {
+            this.difficultyAtTimeOfStopping = difficultyAtTimeOfStopping;
+        }
+    }
     public static class TimeoutTrimmingAssertions extends RaireException {}
-    public static class TiedWinners extends RaireException { int[] expected; }
-    public static class WrongWinner extends RaireException { int[] expected; }
-    public static class CouldNotRuleOut extends RaireException { int[] eliminationOrder; }
+    public static class TiedWinners extends RaireException { final int[] expected;
+        public TiedWinners(int[] expected) {
+            this.expected = expected;
+        }
+    }
+    public static class WrongWinner extends RaireException { final int[] expected;
+        public WrongWinner(int[] expected) {
+            this.expected = expected;
+        }
+    }
+    public static class CouldNotRuleOut extends RaireException { final int[] eliminationOrder;
+        public CouldNotRuleOut(int[] eliminationOrder) {
+            this.eliminationOrder = eliminationOrder;
+        }
+    }
     public static class InternalErrorRuledOutWinner extends RaireException {}
     public static class InternalErrorDidntRuleOutLoser extends RaireException {}
     public static class InternalErrorTrimming extends RaireException {}

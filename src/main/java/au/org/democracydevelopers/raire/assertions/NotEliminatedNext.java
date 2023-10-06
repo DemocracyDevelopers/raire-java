@@ -39,8 +39,16 @@ public class NotEliminatedNext extends Assertion {
         Arrays.sort(this.continuing);
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof NotEliminatedNext) {
+            final NotEliminatedNext o = (NotEliminatedNext) other;
+            return o.winner==winner && o.loser==loser && Arrays.equals(continuing,o.continuing);
+        } else { return false; }
+    }
+
     public double difficulty(Votes votes,AuditType audit) {
-        int tallies[] = votes.restrictedTallies(continuing);
+        int[] tallies = votes.restrictedTallies(continuing);
         int tally_winner = Integer.MAX_VALUE;
         int tally_loser = 0;
         for (int i=0;i<continuing.length;i++) {
@@ -52,7 +60,7 @@ public class NotEliminatedNext extends Assertion {
 
     /** Find the best NEN cote to rule out winner from being the next eliminated when only the given candidates are continuing. May return null if none exist. continuing must include winner. */
     public static AssertionAndDifficulty findBestDifficulty(Votes votes, AuditType audit, int [] continuing, int winner)  {
-        int tallies[] = votes.restrictedTallies(continuing);
+        int[] tallies = votes.restrictedTallies(continuing);
         int tally_winner = Integer.MAX_VALUE;
         int tally_loser = Integer.MAX_VALUE;
         Integer best_loser = null;

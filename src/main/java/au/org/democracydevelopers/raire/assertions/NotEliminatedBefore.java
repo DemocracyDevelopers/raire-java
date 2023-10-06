@@ -26,6 +26,15 @@ public class NotEliminatedBefore extends Assertion {
         this.loser = loser;
     }
 
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof NotEliminatedBefore) {
+            final NotEliminatedBefore o = (NotEliminatedBefore) other;
+            return o.winner==winner && o.loser==loser;
+        } else { return false; }
+    }
+
     @Override
     public boolean isNEB() {
         return true;

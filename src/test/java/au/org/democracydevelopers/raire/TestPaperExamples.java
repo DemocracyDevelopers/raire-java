@@ -14,6 +14,7 @@
 
 package au.org.democracydevelopers.raire;
 
+import au.org.democracydevelopers.raire.algorithm.RaireResult;
 import au.org.democracydevelopers.raire.assertions.NotEliminatedBefore;
 import au.org.democracydevelopers.raire.assertions.NotEliminatedNext;
 import au.org.democracydevelopers.raire.audittype.BallotComparisonMACRO;
@@ -182,4 +183,25 @@ public class TestPaperExamples {
 
         }
     }
+
+    /** Test that RAIRE produces reasonable answers for the BRAVO audit type. */
+    @Test
+    void test_example12_raire_bravo() throws RaireException {
+        final Votes votes = getVotesInExample12();
+        final BallotPollingBRAVO BRAVO_EG12 = new BallotPollingBRAVO(0.05, 27000);
+        assertEquals(BRAVO_EG12.totalAuditableBallots, votes.totalVotes());
+        RaireResult res = new RaireResult(votes,0,BRAVO_EG12,TimeOut.never());
+        assertEquals(278.25,res.difficulty,0.01);
+    }
+
+    /** Test that RAIRE produces reasonable answers for the MACRO audit type. */
+    @Test
+    void test_example12_raire_macro() throws RaireException {
+        final Votes votes = getVotesInExample12();
+        final BallotComparisonMACRO MACRO_EG12 = new BallotComparisonMACRO(0.05, 1.1, 27000);
+        assertEquals(MACRO_EG12.totalAuditableBallots, votes.totalVotes());
+        RaireResult res = new RaireResult(votes,0,MACRO_EG12,TimeOut.never());
+        assertEquals(44.49,res.difficulty,0.01);
+    }
+
 }
