@@ -18,8 +18,10 @@ import au.org.democracydevelopers.raire.assertions.NotEliminatedBefore;
 import au.org.democracydevelopers.raire.assertions.NotEliminatedNext;
 import au.org.democracydevelopers.raire.audittype.BallotComparisonMACRO;
 import au.org.democracydevelopers.raire.audittype.BallotPollingBRAVO;
+import au.org.democracydevelopers.raire.irv.IRVResult;
 import au.org.democracydevelopers.raire.irv.Vote;
 import au.org.democracydevelopers.raire.irv.Votes;
+import au.org.democracydevelopers.raire.time.TimeOut;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -77,7 +79,7 @@ public class TestPaperExamples {
     }
     /** test the getVotesInTable1 function and the methods on the Votes object. */
     @Test
-    void testVotesStructure() {
+    void testVotesStructure() throws RaireException.TimeoutCheckingWinner {
         Votes votes = getVotesInTable1();
         assertEquals(60000,votes.totalVotes());
         assertEquals(26000,votes.firstPreferenceOnlyTally(0));
@@ -86,6 +88,9 @@ public class TestPaperExamples {
         assertEquals(15000,votes.firstPreferenceOnlyTally(3));
         assertArrayEquals(new int[]{26000, 10000, 24000},votes.restrictedTallies(new int[]{0, 1, 3}));
         assertArrayEquals(new int[]{26000,30000},votes.restrictedTallies(new int[]{0, 3}));
+        IRVResult result = votes.runElection(TimeOut.never());
+        assertArrayEquals(new int[]{3},result.possibleWinners);
+        assertArrayEquals(new int[]{2,1,0,3},result.eliminationOrder);
     }
 
 

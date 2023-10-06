@@ -12,7 +12,11 @@
 
 package au.org.democracydevelopers.raire.irv;
 
+import au.org.democracydevelopers.raire.RaireException;
+import au.org.democracydevelopers.raire.time.TimeOut;
+
 import java.util.HashMap;
+import java.util.stream.IntStream;
 
 public class Votes {
     public final Vote[] votes;
@@ -50,13 +54,11 @@ public class Votes {
 
     public int numCandidates() { return firstPreferenceVotes.length; }
 
-/* TODO
     /// only possible error is RaireError::TimeoutCheckingWinner
-    pub fn run_election(&self,timeout:&mut TimeOut) -> Result<IRVResult,RaireError> {
-        let mut work = IRVElectionWork{ winner_given_continuing_candidates: Default::default(), elimination_order: vec![] };
-        let all_candidates : Vec<CandidateIndex> = (0..self.num_candidates()).into_iter().map(|c|CandidateIndex(c)).collect();
-        let possible_winners = work.find_all_possible_winners(all_candidates,&self,timeout)?;
-        Ok(IRVResult{ possible_winners, elimination_order: work.elimination_order })
+    public IRVResult runElection(TimeOut timeout) throws RaireException.TimeoutCheckingWinner {
+        IRVElectionWork work = new IRVElectionWork();
+        int[] all_candidates = IntStream.range(0,numCandidates()).toArray();
+        int[] possible_winners = work.findAllPossibleWinners(all_candidates,this,timeout);
+        return new IRVResult(possible_winners,work.possibleEliminationOrder());
     }
-*/
 }
