@@ -15,7 +15,11 @@ package au.org.democracydevelopers.raire.audittype;
 /** A comparison where the difficulty = 1/diluted margin.
    Useful for Ballot Comparison audits. */
 public class BallotComparisonOneOnDilutedMargin implements AuditType {
-    public int totalAuditableBallots;
+    public final int totalAuditableBallots;
+
+    public BallotComparisonOneOnDilutedMargin(int totalAuditableBallots) {
+        this.totalAuditableBallots = totalAuditableBallots;
+    }
 
     @Override
     public double difficulty(int lowestTallyWinner, int highestTallyLoser) {

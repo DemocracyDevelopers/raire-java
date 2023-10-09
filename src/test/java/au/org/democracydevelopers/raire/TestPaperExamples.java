@@ -22,6 +22,7 @@ import au.org.democracydevelopers.raire.audittype.BallotPollingBRAVO;
 import au.org.democracydevelopers.raire.irv.IRVResult;
 import au.org.democracydevelopers.raire.irv.Vote;
 import au.org.democracydevelopers.raire.irv.Votes;
+import au.org.democracydevelopers.raire.pruning.TrimAlgorithm;
 import au.org.democracydevelopers.raire.time.TimeOut;
 import org.junit.jupiter.api.Test;
 
@@ -190,7 +191,7 @@ public class TestPaperExamples {
         final Votes votes = getVotesInExample12();
         final BallotPollingBRAVO BRAVO_EG12 = new BallotPollingBRAVO(0.05, 27000);
         assertEquals(BRAVO_EG12.totalAuditableBallots, votes.totalVotes());
-        RaireResult res = new RaireResult(votes,0,BRAVO_EG12,TimeOut.never());
+        RaireResult res = new RaireResult(votes,0,BRAVO_EG12, TrimAlgorithm.None,TimeOut.never());
         assertEquals(278.25,res.difficulty,0.01);
     }
 
@@ -200,7 +201,7 @@ public class TestPaperExamples {
         final Votes votes = getVotesInExample12();
         final BallotComparisonMACRO MACRO_EG12 = new BallotComparisonMACRO(0.05, 1.1, 27000);
         assertEquals(MACRO_EG12.totalAuditableBallots, votes.totalVotes());
-        RaireResult res = new RaireResult(votes,0,MACRO_EG12,TimeOut.never());
+        RaireResult res = new RaireResult(votes,0,MACRO_EG12,TrimAlgorithm.None,TimeOut.never());
         assertEquals(44.49,res.difficulty,0.01);
     }
 

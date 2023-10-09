@@ -17,6 +17,8 @@ import au.org.democracydevelopers.raire.assertions.*;
 import au.org.democracydevelopers.raire.audittype.AuditType;
 import au.org.democracydevelopers.raire.irv.IRVResult;
 import au.org.democracydevelopers.raire.irv.Votes;
+import au.org.democracydevelopers.raire.pruning.HeuristicWorkOutWhichAssertionsAreUsed;
+import au.org.democracydevelopers.raire.pruning.TrimAlgorithm;
 import au.org.democracydevelopers.raire.time.TimeOut;
 import au.org.democracydevelopers.raire.time.TimeTaken;
 
@@ -49,8 +51,8 @@ public class RaireResult {
         return res;
     }
 
-    /** This is the main raire algorithm... equivalent of the raire() function in rust-rs */
-    public RaireResult(Votes votes, Integer claimed_winner, AuditType audit, TimeOut timeout) throws RaireException { // TODO add trim algorithm
+    /** This is the main RAIRE algorithm... equivalent of the raire() function in rust-rs */
+    public RaireResult(Votes votes, Integer claimed_winner, AuditType audit, TrimAlgorithm trim_algorithm,TimeOut timeout) throws RaireException {
         IRVResult irv_result = votes.runElection(timeout);
         this.time_to_determine_winners=timeout.timeTaken();
         if (irv_result.possibleWinners.length!=1) throw new RaireException.TiedWinners(irv_result.possibleWinners);
@@ -115,7 +117,7 @@ public class RaireResult {
                 }*/
                 for (int c=0;c<num_candidates;c++) {// for each(c ∈ C \ π):
                     int finalC=c;
-                    if (!(Arrays.stream(sequence_being_considered.pi).anyMatch(pc->pc==finalC)||sequence_being_considered.dive_done.equals(c))) {
+                    if (!(Arrays.stream(sequence_being_considered.pi).anyMatch(pc->pc==finalC)||Integer.valueOf(c).equals(sequence_being_considered.dive_done))) {
                         SequenceAndEffort new_sequence = sequence_being_considered.extend_by_candidate(c,votes,audit,neb_cache);
                         if (new_sequence.pi.length==num_candidates) { // 22 if (|π′| = |C|):
                             lower_bound=new_sequence.contains_all_candidates(assertions,frontier,lower_bound);
@@ -128,14 +130,13 @@ public class RaireResult {
         }
         this.difficulty=lower_bound;
         this.time_to_find_assertions = timeout.timeTaken().minus(time_to_determine_winners);
-        this.warning_trim_timed_out = false;
-        /* TODO
-        let warning_trim_timed_out = match crate::tree_showing_what_assertions_pruned_leaves::order_assertions_and_remove_unnecessary(&mut assertions,winner,votes.num_candidates(),trim_algorithm,timeout) {
-            Ok(_) => false,
-                    Err(RaireError::TimeoutTrimmingAssertions) => true,
-                    Err(e) => {return Err(e);}
-        };*/
-        this.assertions = assertions.toArray(new AssertionAndDifficulty[assertions.size()]);
+        try {
+            HeuristicWorkOutWhichAssertionsAreUsed.order_assertions_and_remove_unnecessary(assertions,winner,num_candidates,trim_algorithm,timeout);
+            this.warning_trim_timed_out = false;
+        } catch (RaireException.TimeoutTrimmingAssertions _e) {
+            this.warning_trim_timed_out=true;
+        }
+        this.assertions = assertions.toArray(AssertionAndDifficulty[]::new);
         this.time_to_trim_assertions = timeout.timeTaken().minus(time_to_find_assertions).minus(time_to_determine_winners);
         this.margin = assertions.stream().mapToInt(a->a.margin).min().orElse(0);
         // simple fast consistency check - make sure that the ostensible elimination order is consistent with all the assertions. If so, then the winner is not ruled out, and all is good.
