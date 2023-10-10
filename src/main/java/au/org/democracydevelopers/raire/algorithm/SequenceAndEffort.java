@@ -29,7 +29,7 @@ class SequenceAndEffort implements Comparable<SequenceAndEffort> {
     /** the best ancestor for pi will be a subset of pi, in particular the last best_ancestor_length elements of pi. */
     final int best_ancestor_length;
     /** if not null, then a dive has already been done on the specified candidate. */
-    final Integer dive_done;
+    Integer dive_done;
 
     SequenceAndEffort(int[] pi, AssertionAndDifficulty best_assertion_for_ancestor, int best_ancestor_length, Integer dive_done) {
         this.pi = pi;

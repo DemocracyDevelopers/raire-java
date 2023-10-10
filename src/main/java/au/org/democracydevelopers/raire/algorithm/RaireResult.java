@@ -51,6 +51,9 @@ public class RaireResult {
         return res;
     }
 
+    /** A modification to the algorithm that searches likely nasty paths first. In practice seems to speed the algorithm up 20-30% */
+    private static final boolean USE_DIVING = true;
+
     /** This is the main RAIRE algorithm... equivalent of the raire() function in rust-rs */
     public RaireResult(Votes votes, Integer claimed_winner, AuditType audit, TrimAlgorithm trim_algorithm,TimeOut timeout) throws RaireException {
         IRVResult irv_result = votes.runElection(timeout);
@@ -84,37 +87,39 @@ public class RaireResult {
             if (sequence_being_considered.difficulty()<= lower_bound) { // may as well just include.
                 sequence_being_considered.just_take_assertion(assertions,frontier);
             } else {
-                /* TODO
-                if USE_DIVING && !sequence_being_considered.dive_done.is_some() {
-                    let mut last : Option<SequenceAndEffort> = None;
-                    assert_eq!(irv_result.elimination_order.len(),votes.num_candidates() as usize);
-                    for &c in irv_result.elimination_order.iter().rev() {
-                        if !sequence_being_considered.pi.contains(&c) {
-                            let new_sequence = match last.take() { // don't repeat work! Mark that this path has already been dealt with.
-                                Some(mut l) => {
-                                    l.dive_done=Some(c);
-                                    let new_sequence = l.extend_by_candidate(c,votes,audit,&neb_cache);
-                                    frontier.push(l);
-                                    new_sequence
-                                }
-                                None => {
-                                    sequence_being_considered.dive_done=Some(c);
-                                    sequence_being_considered.extend_by_candidate(c,votes,audit,&neb_cache)
-                                },
-                            };
-                            if new_sequence.difficulty()<= lower_bound {
-                                new_sequence.just_take_assertion(&mut assertions,&mut frontier);
+                if (USE_DIVING && sequence_being_considered.dive_done==null) {
+                    SequenceAndEffort last=null;
+                    assert (irv_result.eliminationOrder.length==num_candidates);
+                    for (int i=irv_result.eliminationOrder.length-1;i>=0;i--) { // iterate c over candidates in irv_result.eliminationOrder in reverse
+                        final int c = irv_result.eliminationOrder[i];
+                        if (Arrays.stream(sequence_being_considered.pi).noneMatch(e->e==c)) {
+                            SequenceAndEffort new_sequence;
+                            if (last!=null) { // don't repeat work! Mark that this path has already been dealt with.
+                                last.dive_done= c; // automatically boxed.
+                                frontier.add(last);
+                                new_sequence=last.extend_by_candidate(c,votes,audit,neb_cache);
+                                last=null;
+                            } else {
+                                sequence_being_considered.dive_done=c;
+                                new_sequence=sequence_being_considered.extend_by_candidate(c,votes,audit,neb_cache);
+                            }
+                            if (new_sequence.difficulty()<=lower_bound) {
+                                new_sequence.just_take_assertion(assertions,frontier);
                                 break;
                             } else {
-                                last = Some(new_sequence);
+                                last=new_sequence;
                             }
                         }
                     }
-                    if let Some(last) = last {
-                        assert_eq!(last.pi.len(),votes.num_candidates() as usize);
-                        last.contains_all_candidates(&mut assertions,&mut frontier,&mut lower_bound)?;
+                    if (last!=null) {
+                        assert last.pi.length==num_candidates;
+                        lower_bound=last.contains_all_candidates(assertions,frontier,lower_bound);
+                        if (sequence_being_considered.difficulty()<= lower_bound) { // the lower bound may have changed in such a way that there is no point continuing this assertion.
+                            sequence_being_considered.just_take_assertion(assertions,frontier);
+                            continue;
+                        }
                     }
-                }*/
+                }
                 for (int c=0;c<num_candidates;c++) {// for each(c ∈ C \ π):
                     int finalC=c;
                     if (!(Arrays.stream(sequence_being_considered.pi).anyMatch(pc->pc==finalC)||Integer.valueOf(c).equals(sequence_being_considered.dive_done))) {
