@@ -12,6 +12,7 @@
 
 package au.org.democracydevelopers.raire.algorithm;
 
+import au.org.democracydevelopers.raire.RaireError;
 import au.org.democracydevelopers.raire.RaireException;
 import au.org.democracydevelopers.raire.assertions.*;
 import au.org.democracydevelopers.raire.audittype.AuditType;
@@ -58,9 +59,9 @@ public class RaireResult {
     public RaireResult(Votes votes, Integer claimed_winner, AuditType audit, TrimAlgorithm trim_algorithm,TimeOut timeout) throws RaireException {
         IRVResult irv_result = votes.runElection(timeout);
         this.time_to_determine_winners=timeout.timeTaken();
-        if (irv_result.possibleWinners.length!=1) throw new RaireException.TiedWinners(irv_result.possibleWinners);
+        if (irv_result.possibleWinners.length!=1) throw new RaireException(new RaireError.TiedWinners(irv_result.possibleWinners));
         this.winner = irv_result.possibleWinners[0];
-        if (claimed_winner!=null && claimed_winner!=winner) throw new RaireException.WrongWinner(irv_result.possibleWinners);
+        if (claimed_winner!=null && claimed_winner!=winner) throw new RaireException(new RaireError.WrongWinner(irv_result.possibleWinners));
         NotEliminatedBeforeCache neb_cache = new NotEliminatedBeforeCache(votes,audit);
         ArrayList<AssertionAndDifficulty> assertions = new ArrayList<>(); // A in the original paper
         double lower_bound = 0.0; // LB in the original paper. A lower bound on the difficulty of the problem.
@@ -79,7 +80,7 @@ public class RaireResult {
         }
         // Repeatedly expand the sequence with largest ASN in F
         for (SequenceAndEffort sequence_being_considered=frontier.poll();sequence_being_considered!=null;sequence_being_considered=frontier.poll()) {
-            if (timeout.quickCheckTimeout()) throw new RaireException.TimeoutFindingAssertions(Math.max(sequence_being_considered.difficulty(),lower_bound));
+            if (timeout.quickCheckTimeout()) throw new RaireException(new RaireError.TimeoutFindingAssertions(Math.max(sequence_being_considered.difficulty(),lower_bound)));
             if (sequence_being_considered.difficulty()!=last_difficulty) {
                 last_difficulty=sequence_being_considered.difficulty();
                 // log::trace!("Difficulty reduced to {}{}",last_difficulty,if last_difficulty<= lower_bound {" OK"} else {""});
@@ -138,15 +139,16 @@ public class RaireResult {
         try {
             HeuristicWorkOutWhichAssertionsAreUsed.order_assertions_and_remove_unnecessary(assertions,winner,num_candidates,trim_algorithm,timeout);
             this.warning_trim_timed_out = false;
-        } catch (RaireException.TimeoutTrimmingAssertions _e) {
-            this.warning_trim_timed_out=true;
+        } catch (RaireException e) {
+            if (e.error instanceof RaireError.TimeoutTrimmingAssertions) this.warning_trim_timed_out=true;
+            else throw e;
         }
         this.assertions = assertions.toArray(AssertionAndDifficulty[]::new);
         this.time_to_trim_assertions = timeout.timeTaken().minus(time_to_find_assertions).minus(time_to_determine_winners);
         this.margin = assertions.stream().mapToInt(a->a.margin).min().orElse(0);
         // simple fast consistency check - make sure that the ostensible elimination order is consistent with all the assertions. If so, then the winner is not ruled out, and all is good.
         for (AssertionAndDifficulty a : this.assertions) {
-            if (a.assertion.okEliminationOrderSuffix(irv_result.eliminationOrder)!= EffectOfAssertionOnEliminationOrderSuffix.Ok) throw new RaireException.InternalErrorRuledOutWinner();
+            if (a.assertion.okEliminationOrderSuffix(irv_result.eliminationOrder)!= EffectOfAssertionOnEliminationOrderSuffix.Ok) throw new RaireException(new RaireError.InternalErrorRuledOutWinner());
         }
     }
 }

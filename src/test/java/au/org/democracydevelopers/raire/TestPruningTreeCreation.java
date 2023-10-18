@@ -45,12 +45,12 @@ public class TestPruningTreeCreation {
     }
 
     @Test
-    void tree_creation_correct() throws RaireException.TimeoutTrimmingAssertions {
+    void tree_creation_correct() throws RaireException {
         Assertion[] all_assertions = raire_guide_assertions();
         ArrayList<Integer> relevant_assertions = IntStream.range(0, all_assertions.length).boxed().collect(Collectors.toCollection(ArrayList::new)); // 0 to all_assertions.length
         TimeOut timeout = new TimeOut(1000L,null);
         TimeOut timeout_instantly = new TimeOut(1L,null);
-        assertThrows(RaireException.TimeoutTrimmingAssertions.class,()->{ // check timeout instantly actually happens
+        assertThrows(RaireException.class,()->{ // check timeout instantly actually happens
             new TreeNodeShowingWhatAssertionsPrunedIt(new int[0],0,relevant_assertions,all_assertions,4, HowFarToContinueSearchTreeWhenPruningAssertionFound.StopImmediately,timeout_instantly);
         });
         TreeNodeShowingWhatAssertionsPrunedIt tree0=new TreeNodeShowingWhatAssertionsPrunedIt(new int[0],0,relevant_assertions,all_assertions,4,HowFarToContinueSearchTreeWhenPruningAssertionFound.StopImmediately,timeout);

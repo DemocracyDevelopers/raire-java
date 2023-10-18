@@ -12,34 +12,12 @@
 
 package au.org.democracydevelopers.raire;
 
-/** The type of errors the RAIRE algorithm may produce. */
-public abstract class RaireException extends Exception {
-    public static class InvalidTimeout extends RaireException {}
-    public static class TimeoutCheckingWinner extends RaireException {}
-    public static class TimeoutFindingAssertions extends RaireException { final double difficultyAtTimeOfStopping;
-        public TimeoutFindingAssertions(double difficultyAtTimeOfStopping) {
-            this.difficultyAtTimeOfStopping = difficultyAtTimeOfStopping;
-        }
+/** Exceptions the RAIRE algorithm may produce. The real detail is in the RaireError class. */
+public class RaireException extends Exception {
+    public final RaireError error;
+    public RaireException(RaireError error) {
+        this.error = error;
     }
-    public static class TimeoutTrimmingAssertions extends RaireException {}
-    public static class TiedWinners extends RaireException { final int[] expected;
-        public TiedWinners(int[] expected) {
-            this.expected = expected;
-        }
-    }
-    public static class WrongWinner extends RaireException { final int[] expected;
-        public WrongWinner(int[] expected) {
-            this.expected = expected;
-        }
-    }
-    public static class CouldNotRuleOut extends RaireException { final int[] eliminationOrder;
-        public CouldNotRuleOut(int[] eliminationOrder) {
-            this.eliminationOrder = eliminationOrder;
-        }
-    }
-    public static class InternalErrorRuledOutWinner extends RaireException {}
-    public static class InternalErrorDidntRuleOutLoser extends RaireException {}
-    public static class InternalErrorTrimming extends RaireException {}
 }
 
 

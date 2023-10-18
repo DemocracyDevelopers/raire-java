@@ -12,6 +12,7 @@
 
 package au.org.democracydevelopers.raire.algorithm;
 
+import au.org.democracydevelopers.raire.RaireError;
 import au.org.democracydevelopers.raire.RaireException;
 import au.org.democracydevelopers.raire.assertions.AssertionAndDifficulty;
 import au.org.democracydevelopers.raire.assertions.NotEliminatedBeforeCache;
@@ -82,10 +83,10 @@ class SequenceAndEffort implements Comparable<SequenceAndEffort> {
     }
 
     /** Called when a sequence has gone as far as it can - i.e. all candidates are in the exclusion order list. Returns the new lower bound, or throws an exception. */
-    public double contains_all_candidates(ArrayList<AssertionAndDifficulty> assertions, PriorityQueue<SequenceAndEffort> frontier,double lower_bound) throws RaireException.CouldNotRuleOut {
+    public double contains_all_candidates(ArrayList<AssertionAndDifficulty> assertions, PriorityQueue<SequenceAndEffort> frontier,double lower_bound) throws RaireException {
         if (Double.isInfinite(difficulty())) { // 23 if (ASN (asr[ba[π ′ ]]) = ∞):
             //println!("Couldn't deal with {:?}",new_sequence.pi);
-            throw new RaireException.CouldNotRuleOut(pi); // 24 terminate algorithm, full recount necessary
+            throw new RaireException(new RaireError.CouldNotRuleOut(pi)); // 24 terminate algorithm, full recount necessary
         } else {
             if (lower_bound<difficulty()) {
                 lower_bound=difficulty(); // 27 LB ← max(LB, ASN (asr[ba[π′]]))

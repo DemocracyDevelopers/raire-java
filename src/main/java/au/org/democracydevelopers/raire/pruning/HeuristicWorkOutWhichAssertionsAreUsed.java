@@ -12,6 +12,7 @@
 
 package au.org.democracydevelopers.raire.pruning;
 
+import au.org.democracydevelopers.raire.RaireError;
 import au.org.democracydevelopers.raire.RaireException;
 import au.org.democracydevelopers.raire.assertions.Assertion;
 import au.org.democracydevelopers.raire.assertions.AssertionAndDifficulty;
@@ -56,8 +57,8 @@ public class HeuristicWorkOutWhichAssertionsAreUsed {
         // now check to see if all the children are eliminated.
         return node.children.length!=0 && Arrays.stream(node.children).allMatch(this::node_already_eliminated);
     }
-    private void add_tree_second_pass(TreeNodeShowingWhatAssertionsPrunedIt node, TimeOut timeout) throws RaireException.TimeoutTrimmingAssertions {
-        if (timeout.quickCheckTimeout()) throw new RaireException.TimeoutTrimmingAssertions();
+    private void add_tree_second_pass(TreeNodeShowingWhatAssertionsPrunedIt node, TimeOut timeout) throws RaireException {
+        if (timeout.quickCheckTimeout()) throw new RaireException(new RaireError.TimeoutTrimmingAssertions());
         if (node.pruning_assertions.length>0) {
             if (!node_already_eliminated(node)) {
                 assertions_used.set(node.pruning_assertions[0]);
@@ -120,7 +121,7 @@ public class HeuristicWorkOutWhichAssertionsAreUsed {
         for (int candidate=0;candidate<num_candidates;candidate++) { // create trees and do first pass
             if (candidate!=winner) {
                 TreeNodeShowingWhatAssertionsPrunedIt tree = new TreeNodeShowingWhatAssertionsPrunedIt(new int[0],candidate,all_assertion_indices,all_assertions,num_candidates,consider_children_of_eliminated_nodes,timeout);
-                if (tree.valid) throw new RaireException.InternalErrorDidntRuleOutLoser();
+                if (tree.valid) throw new RaireException(new RaireError.InternalErrorDidntRuleOutLoser());
                 find_used.add_tree_forced(tree);
                 trees.add(tree);
             }

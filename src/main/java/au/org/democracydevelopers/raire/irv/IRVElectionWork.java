@@ -12,6 +12,7 @@
 
 package au.org.democracydevelopers.raire.irv;
 
+import au.org.democracydevelopers.raire.RaireError;
 import au.org.democracydevelopers.raire.RaireException;
 import au.org.democracydevelopers.raire.time.TimeOut;
 
@@ -24,8 +25,8 @@ class IRVElectionWork {
     private final HashMap<BitSet,int[]> winner_given_continuing_candidates=new HashMap<>();
 
     /** Find all possible winners, trying all options with ties. */
-    public int[] findAllPossibleWinners(int[] continuing, Votes votes, TimeOut timeout) throws RaireException.TimeoutCheckingWinner {
-        if (timeout.quickCheckTimeout()) throw new RaireException.TimeoutCheckingWinner();
+    public int[] findAllPossibleWinners(int[] continuing, Votes votes, TimeOut timeout) throws RaireException {
+        if (timeout.quickCheckTimeout()) throw new RaireException(new RaireError.TimeoutCheckingWinner());
         if (continuing.length==1) {
             if (elimination_order.size()+continuing.length==votes.numCandidates()) {
                 // There may be multiple elimination orders. The check above checks that we are in the path of the first depth first traversal of the tree of elimination orders.

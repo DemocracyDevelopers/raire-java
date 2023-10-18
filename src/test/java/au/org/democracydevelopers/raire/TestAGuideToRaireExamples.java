@@ -47,7 +47,7 @@ public class TestAGuideToRaireExamples {
 
     // Test the get_votes() function and the methods on the Votes object.
     @Test
-    void testVotesStructure() throws RaireException.TimeoutCheckingWinner {
+    void testVotesStructure() throws RaireException {
         Votes votes = getVotes();
         assertEquals(AUDIT.totalAuditableBallots,votes.totalVotes());
         assertEquals(4000,votes.firstPreferenceOnlyTally(A));

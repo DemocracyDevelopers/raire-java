@@ -81,7 +81,7 @@ public class TestPaperExamples {
     }
     /** test the getVotesInTable1 function and the methods on the Votes object. */
     @Test
-    void testVotesStructure() throws RaireException.TimeoutCheckingWinner {
+    void testVotesStructure() throws RaireException {
         Votes votes = getVotesInTable1();
         assertEquals(60000,votes.totalVotes());
         assertEquals(26000,votes.firstPreferenceOnlyTally(0));

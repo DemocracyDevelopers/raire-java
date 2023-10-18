@@ -55,7 +55,7 @@ public class Votes {
     public int numCandidates() { return firstPreferenceVotes.length; }
 
     /// only possible error is RaireError::TimeoutCheckingWinner
-    public IRVResult runElection(TimeOut timeout) throws RaireException.TimeoutCheckingWinner {
+    public IRVResult runElection(TimeOut timeout) throws RaireException {
         IRVElectionWork work = new IRVElectionWork();
         int[] all_candidates = IntStream.range(0,numCandidates()).toArray();
         int[] possible_winners = work.findAllPossibleWinners(all_candidates,this,timeout);
