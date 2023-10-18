@@ -76,7 +76,7 @@ public class TreeNodeShowingWhatAssertionsPrunedIt {
             }
         }
         this.valid=valid;
-        this.children=children.toArray(new TreeNodeShowingWhatAssertionsPrunedIt[children.size()]);
+        this.children=children.toArray(TreeNodeShowingWhatAssertionsPrunedIt[]::new);
         this.pruning_assertions=pruning_assertions.stream().mapToInt(Integer::intValue).toArray();
     }
 }
