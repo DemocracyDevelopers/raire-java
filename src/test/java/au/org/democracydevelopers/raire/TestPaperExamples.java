@@ -33,7 +33,7 @@ public class TestPaperExamples {
 
 
     /// Get the votes in table 1.
-    Votes getVotesInTable1() {
+    Votes getVotesInTable1() throws RaireException {
         final int c1 = 0;
         final int c2 = 1;
         final int c3 = 2;
@@ -50,7 +50,7 @@ public class TestPaperExamples {
     }
 
     /// Get the votes for example 9.
-    Votes getVotesInExample9() {
+    Votes getVotesInExample9() throws RaireException {
         final int c1 = 0;
         final int c2 = 1;
         final int c3 = 2;
@@ -63,7 +63,7 @@ public class TestPaperExamples {
     }
 
     /// Get the votes for example 12.
-    Votes getVotesInExample12() {
+    Votes getVotesInExample12() throws RaireException {
         final int c1 = 0;
         final int c2 = 1;
         final int c3 = 2;
@@ -98,7 +98,7 @@ public class TestPaperExamples {
 
     /** Test ASNs for example 10 in the paper */
     @Test
-    void test_example10() {
+    void test_example10() throws RaireException {
         final Votes votes = getVotesInExample9();
         final BallotPollingBRAVO BRAVO_EG5 = new BallotPollingBRAVO(0.05,21999);
         assertEquals(BRAVO_EG5.totalAuditableBallots,votes.totalVotes());
@@ -113,7 +113,7 @@ public class TestPaperExamples {
 
     /** Test ASNs for example 11 in the paper */
     @Test
-    void test_example11() {
+    void test_example11() throws RaireException {
         final Votes votes = getVotesInExample9();
         final BallotComparisonMACRO MACRO_EG5 = new BallotComparisonMACRO(0.05,1.1,21999);
         assertEquals(MACRO_EG5.totalAuditableBallots,votes.totalVotes());
@@ -128,7 +128,7 @@ public class TestPaperExamples {
 
     /** Test ASNs for example 12 in the paper */
     @Test
-    void test_example12_asns() {
+    void test_example12_asns() throws RaireException {
         final Votes votes = getVotesInExample12();
         final BallotPollingBRAVO BRAVO_EG12 = new BallotPollingBRAVO(0.05, 27000);
         final BallotComparisonMACRO MACRO_EG12 = new BallotComparisonMACRO(0.05, 1.1, 27000);

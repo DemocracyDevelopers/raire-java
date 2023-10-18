@@ -32,7 +32,7 @@ public class TestAGuideToRaireExamples {
     final static int D = 3; // Diego
 
     /** Get the votes in Example 10 (at the time of writing), used in examples in chapter 6, "Using RAIRE to generate assertions". */
-    public Votes getVotes() {
+    public Votes getVotes() throws RaireException {
         Vote [] votes = new Vote[] {
                 new Vote(5000,new int[]{C,B,A}),
                 new Vote(1000,new int[]{B,C,D}),
@@ -61,14 +61,14 @@ public class TestAGuideToRaireExamples {
         assertArrayEquals(new int[]{B,D,A,C},result.eliminationOrder);
     }
 
-    double testNEB(int winner,int loser) {
+    double testNEB(int winner,int loser) throws RaireException {
         NotEliminatedBefore assertion = new NotEliminatedBefore(winner,loser);
         return assertion.difficulty(getVotes(),AUDIT).difficulty;
     }
 
     /** Check NEB assertions in table 6.1 showing that A, B and C cannot be the last candidate standing. */
     @Test
-    void test_neb_assertions() {
+    void test_neb_assertions() throws RaireException {
         assertTrue(Double.isInfinite(testNEB(B,A)));
         assertTrue(Double.isInfinite(testNEB(C,A)));
         assertTrue(Double.isInfinite(testNEB(D,A)));

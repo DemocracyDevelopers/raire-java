@@ -12,6 +12,7 @@
 
 package au.org.democracydevelopers.raire.irv;
 
+import au.org.democracydevelopers.raire.RaireError;
 import au.org.democracydevelopers.raire.RaireException;
 import au.org.democracydevelopers.raire.time.TimeOut;
 
@@ -22,11 +23,15 @@ public class Votes {
     public final Vote[] votes;
     private final int[] firstPreferenceVotes;
 
-    public Votes(Vote[] votes, int numCandidates) {
+    public Votes(Vote[] votes, int numCandidates) throws RaireException {
         this.votes=votes;
         this.firstPreferenceVotes=new int[numCandidates];
         for (Vote v : votes) {
-            if (v.prefs.length>0) this.firstPreferenceVotes[v.prefs[0]]+=v.n;
+            if (v.prefs.length>0) {
+                final int candidate = v.prefs[0];
+                if (candidate>=numCandidates || candidate<0) throw new RaireException(new RaireError.InvalidCandidateNumber());
+                this.firstPreferenceVotes[candidate]+=v.n;
+            }
         }
     }
 
