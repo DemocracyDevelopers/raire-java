@@ -12,7 +12,6 @@
 
 package au.org.democracydevelopers.raire;
 
-import au.org.democracydevelopers.raire.irv.Vote;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
@@ -20,6 +19,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * A simple program to execute the RAIRE algorithm on a JSON file producing a JSON file
+ */
 public class CommandLine {
     public static void main(String[] args) throws Exception {
         if (args.length<1 || args.length>2) {
