@@ -101,7 +101,7 @@ public class TestPaperExamples {
     void test_example10() throws RaireException {
         final Votes votes = getVotesInExample9();
         final BallotPollingBRAVO BRAVO_EG5 = new BallotPollingBRAVO(0.05,21999);
-        assertEquals(BRAVO_EG5.totalAuditableBallots,votes.totalVotes());
+        assertEquals(BRAVO_EG5.total_auditable_ballots,votes.totalVotes());
         NotEliminatedBefore assertion1 = new NotEliminatedBefore(0,1);
         NotEliminatedBefore assertion2 = new NotEliminatedBefore(0,2);
         double asn1 = assertion1.difficulty(votes, BRAVO_EG5).difficulty;
@@ -116,7 +116,7 @@ public class TestPaperExamples {
     void test_example11() throws RaireException {
         final Votes votes = getVotesInExample9();
         final BallotComparisonMACRO MACRO_EG5 = new BallotComparisonMACRO(0.05,1.1,21999);
-        assertEquals(MACRO_EG5.totalAuditableBallots,votes.totalVotes());
+        assertEquals(MACRO_EG5.total_auditable_ballots,votes.totalVotes());
         NotEliminatedBefore assertion1 = new NotEliminatedBefore(0,1);
         NotEliminatedBefore assertion2 = new NotEliminatedBefore(0,2);
         double asn1 = assertion1.difficulty(votes, MACRO_EG5).difficulty;
@@ -132,8 +132,8 @@ public class TestPaperExamples {
         final Votes votes = getVotesInExample12();
         final BallotPollingBRAVO BRAVO_EG12 = new BallotPollingBRAVO(0.05, 27000);
         final BallotComparisonMACRO MACRO_EG12 = new BallotComparisonMACRO(0.05, 1.1, 27000);
-        assertEquals(MACRO_EG12.totalAuditableBallots, votes.totalVotes());
-        assertEquals(BRAVO_EG12.totalAuditableBallots, votes.totalVotes());
+        assertEquals(MACRO_EG12.total_auditable_ballots, votes.totalVotes());
+        assertEquals(BRAVO_EG12.total_auditable_ballots, votes.totalVotes());
         { // test bravo
             NotEliminatedNext assertion1 = new NotEliminatedNext(0,1,new int[]{0,1});
             NotEliminatedNext assertion2 = new NotEliminatedNext(0,2,new int[]{0,2});
@@ -190,7 +190,7 @@ public class TestPaperExamples {
     void test_example12_raire_bravo() throws RaireException {
         final Votes votes = getVotesInExample12();
         final BallotPollingBRAVO BRAVO_EG12 = new BallotPollingBRAVO(0.05, 27000);
-        assertEquals(BRAVO_EG12.totalAuditableBallots, votes.totalVotes());
+        assertEquals(BRAVO_EG12.total_auditable_ballots, votes.totalVotes());
         RaireResult res = new RaireResult(votes,0,BRAVO_EG12, TrimAlgorithm.None,TimeOut.never());
         assertEquals(278.25,res.difficulty,0.01);
     }
@@ -200,7 +200,7 @@ public class TestPaperExamples {
     void test_example12_raire_macro() throws RaireException {
         final Votes votes = getVotesInExample12();
         final BallotComparisonMACRO MACRO_EG12 = new BallotComparisonMACRO(0.05, 1.1, 27000);
-        assertEquals(MACRO_EG12.totalAuditableBallots, votes.totalVotes());
+        assertEquals(MACRO_EG12.total_auditable_ballots, votes.totalVotes());
         RaireResult res = new RaireResult(votes,0,MACRO_EG12,TrimAlgorithm.None,TimeOut.never());
         assertEquals(44.49,res.difficulty,0.01);
     }

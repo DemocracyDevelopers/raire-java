@@ -15,6 +15,7 @@ package au.org.democracydevelopers.raire.assertions;
 import au.org.democracydevelopers.raire.audittype.AuditType;
 import au.org.democracydevelopers.raire.irv.Votes;
 
+import java.beans.ConstructorProperties;
 import java.util.Arrays;
 
 /**
@@ -32,6 +33,7 @@ public class NotEliminatedNext extends Assertion {
     public final int[] continuing;
 
 
+    @ConstructorProperties({"winner","loser","continuing"})
     public NotEliminatedNext(int winner, int loser, int[] continuing) {
         this.winner = winner;
         this.loser = loser;

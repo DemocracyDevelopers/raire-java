@@ -12,10 +12,22 @@
 
 package au.org.democracydevelopers.raire.assertions;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = NotEliminatedBefore.class, name = "NEB"),
+        @JsonSubTypes.Type(value = NotEliminatedNext.class, name = "NEN")
+})
 public abstract class Assertion {
+    @JsonIgnore
     public abstract boolean isNEB();
     public abstract EffectOfAssertionOnEliminationOrderSuffix okEliminationOrderSuffix(int[] eliminationOrderSuffix);
 

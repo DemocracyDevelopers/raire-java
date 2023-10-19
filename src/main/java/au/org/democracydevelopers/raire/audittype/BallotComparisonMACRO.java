@@ -12,16 +12,19 @@
 
 package au.org.democracydevelopers.raire.audittype;
 
+import java.beans.ConstructorProperties;
+
 /* A MACRO ballot comparison audit as described in the original paper. */
 public class BallotComparisonMACRO implements AuditType {
     public final double confidence; // The desired confidence α. A number between 0 and 1 bounding the probability of not rejecting a false result.
-    public final double errorInflationFactor; // γ ≥ 1
-    public final int totalAuditableBallots;
+    public final double error_inflation_factor; // γ ≥ 1
+    public final int total_auditable_ballots;
 
-    public BallotComparisonMACRO(double confidence, double errorInflationFactor, int totalAuditableBallots) {
+    @ConstructorProperties({"confidence","error_inflation_factor","total_auditable_ballots"})
+    public BallotComparisonMACRO(double confidence, double error_inflation_factor, int total_auditable_ballots) {
         this.confidence = confidence;
-        this.errorInflationFactor = errorInflationFactor;
-        this.totalAuditableBallots = totalAuditableBallots;
+        this.error_inflation_factor = error_inflation_factor;
+        this.total_auditable_ballots = total_auditable_ballots;
     }
 
     @Override
@@ -29,7 +32,7 @@ public class BallotComparisonMACRO implements AuditType {
         if (lowestTallyWinner<=highestTallyLoser) return Double.POSITIVE_INFINITY;
         else {
             final double v = lowestTallyWinner-highestTallyLoser;
-            final double u = (2.0*errorInflationFactor*totalAuditableBallots)/v;
+            final double u = (2.0*error_inflation_factor*total_auditable_ballots)/v;
             return -Math.log(confidence)*u;
         }
     }

@@ -14,7 +14,6 @@ package au.org.democracydevelopers.raire;
 
 import au.org.democracydevelopers.raire.algorithm.RaireResult;
 import au.org.democracydevelopers.raire.assertions.NotEliminatedBefore;
-import au.org.democracydevelopers.raire.audittype.AuditType;
 import au.org.democracydevelopers.raire.audittype.BallotComparisonOneOnDilutedMargin;
 import au.org.democracydevelopers.raire.irv.IRVResult;
 import au.org.democracydevelopers.raire.irv.Vote;
@@ -49,7 +48,7 @@ public class TestAGuideToRaireExamples {
     @Test
     void testVotesStructure() throws RaireException {
         Votes votes = getVotes();
-        assertEquals(AUDIT.totalAuditableBallots,votes.totalVotes());
+        assertEquals(AUDIT.total_auditable_ballots,votes.totalVotes());
         assertEquals(4000,votes.firstPreferenceOnlyTally(A));
         assertEquals(1000,votes.firstPreferenceOnlyTally(B));
         assertEquals(5000,votes.firstPreferenceOnlyTally(C));

@@ -12,11 +12,14 @@
 
 package au.org.democracydevelopers.raire.time;
 
+import java.beans.ConstructorProperties;
+
 /** A measure of the time taken to do something, both in units of work and clock time */
 public class TimeTaken {
     public final long work;
     public final double seconds;
 
+    @ConstructorProperties({"work","seconds"})
     public TimeTaken(long work, double seconds) {
         this.work = work;
         this.seconds = seconds;

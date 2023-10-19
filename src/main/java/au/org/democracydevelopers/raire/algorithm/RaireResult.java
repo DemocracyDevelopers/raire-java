@@ -23,6 +23,7 @@ import au.org.democracydevelopers.raire.pruning.TrimAlgorithm;
 import au.org.democracydevelopers.raire.time.TimeOut;
 import au.org.democracydevelopers.raire.time.TimeTaken;
 
+import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.PriorityQueue;
@@ -39,6 +40,19 @@ public class RaireResult {
     public TimeTaken time_to_trim_assertions;
     public boolean warning_trim_timed_out;
 
+    /** Just used by the JSON serializer */
+    @ConstructorProperties({"assertions","difficulty","margin","winner","num_candidates","time_to_determine_winners","time_to_find_assertions","time_to_trim_assertions","warning_trim_timed_out"})
+    public RaireResult(AssertionAndDifficulty[] assertions,double difficulty,int margin,int winner,int num_candidates,TimeTaken time_to_determine_winners,TimeTaken time_to_find_assertions,TimeTaken time_to_trim_assertions,boolean warning_trim_timed_out) {
+        this.assertions=assertions;
+        this.difficulty=difficulty;
+        this.margin=margin;
+        this.winner=winner;
+        this.num_candidates=num_candidates;
+        this.time_to_determine_winners=time_to_determine_winners;
+        this.time_to_find_assertions=time_to_find_assertions;
+        this.time_to_trim_assertions=time_to_trim_assertions;
+        this.warning_trim_timed_out=warning_trim_timed_out;
+    }
     static AssertionAndDifficulty find_best_audit(int[] pi, Votes votes, AuditType audit, NotEliminatedBeforeCache neb_cache) {
         final int c = pi[0];
         AssertionAndDifficulty res = new AssertionAndDifficulty(new NotEliminatedBefore(c,c),Double.POSITIVE_INFINITY,0); // dummy infinitely bad assertion

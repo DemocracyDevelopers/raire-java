@@ -12,14 +12,17 @@
 
 package au.org.democracydevelopers.raire.audittype;
 
+import java.beans.ConstructorProperties;
+
 /* A BRAVO ballot polling audit as described in the original paper. */
 public class BallotPollingBRAVO implements AuditType {
     public final double confidence; // The desired confidence α. A number between 0 and 1 bounding the probability of not rejecting a false result.
-    public final int totalAuditableBallots;
+    public final int total_auditable_ballots;
 
-    public BallotPollingBRAVO(double confidence, int totalAuditableBallots) {
+    @ConstructorProperties({"confidence","total_auditable_ballots"})
+    public BallotPollingBRAVO(double confidence, int total_auditable_ballots) {
         this.confidence = confidence;
-        this.totalAuditableBallots = totalAuditableBallots;
+        this.total_auditable_ballots = total_auditable_ballots;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class BallotPollingBRAVO implements AuditType {
             final double twos = 2.0*s;
             final double ln2s = Math.log(twos);
             final double numerator = 0.5*ln2s-Math.log(confidence);
-            final double denominator = (w*ln2s+l*Math.log(2.0-twos))/totalAuditableBallots;
+            final double denominator = (w*ln2s+l*Math.log(2.0-twos))/ total_auditable_ballots;
             return numerator/denominator;
         }
     }

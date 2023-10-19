@@ -12,6 +12,7 @@
 
 package au.org.democracydevelopers.raire.irv;
 
+import java.beans.ConstructorProperties;
 import java.util.BitSet;
 import java.util.HashMap;
 
@@ -19,6 +20,7 @@ public class Vote {
     public final int n; // The number of voters who voted this way
     public final int[] prefs; //  prefs[0] is the first preferenced candidate.
 
+    @ConstructorProperties({"n","prefs"})
     public Vote(int n, int[] prefs) {
         this.n = n;
         this.prefs = prefs;

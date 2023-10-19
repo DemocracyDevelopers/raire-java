@@ -12,13 +12,16 @@
 
 package au.org.democracydevelopers.raire.audittype;
 
+import java.beans.ConstructorProperties;
+
 /** A comparison where the difficulty = 1/diluted margin.
    Useful for Ballot Comparison audits. */
 public class BallotComparisonOneOnDilutedMargin implements AuditType {
-    public final int totalAuditableBallots;
+    public final int total_auditable_ballots;
 
-    public BallotComparisonOneOnDilutedMargin(int totalAuditableBallots) {
-        this.totalAuditableBallots = totalAuditableBallots;
+    @ConstructorProperties("total_auditable_ballots")
+    public BallotComparisonOneOnDilutedMargin(int total_auditable_ballots) {
+        this.total_auditable_ballots = total_auditable_ballots;
     }
 
     @Override
@@ -26,7 +29,7 @@ public class BallotComparisonOneOnDilutedMargin implements AuditType {
         if (lowestTallyWinner<=highestTallyLoser) return Double.POSITIVE_INFINITY;
         else {
             final double margin = lowestTallyWinner-highestTallyLoser;
-            return ((double)totalAuditableBallots)/margin;
+            return ((double)total_auditable_ballots)/margin;
         }
     }
 }

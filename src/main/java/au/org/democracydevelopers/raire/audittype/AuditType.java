@@ -13,10 +13,22 @@
 
 package au.org.democracydevelopers.raire.audittype;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * An audit type is a method for determining a difficulty (higher means more difficult, infinite means impossible) for
  * a comparison of two claimed tallys.
  */
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = BallotComparisonMACRO.class, name = "MACRO"),
+        @JsonSubTypes.Type(value = BallotPollingBRAVO.class, name = "BRAVO"),
+        @JsonSubTypes.Type(value = BallotComparisonOneOnDilutedMargin.class, name = "OneOnMargin"),
+        @JsonSubTypes.Type(value = BallotComparisonOneOnDilutedMarginSquared.class, name = "OneOnMarginSq")
+})
 public interface AuditType {
     /**
      *
