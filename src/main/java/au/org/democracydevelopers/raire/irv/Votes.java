@@ -16,6 +16,7 @@ import au.org.democracydevelopers.raire.RaireError;
 import au.org.democracydevelopers.raire.RaireException;
 import au.org.democracydevelopers.raire.time.TimeOut;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 
@@ -40,10 +41,11 @@ public class Votes {
     /// Get the tallies for continuing candidates, returning a vector of the same length and order as the continuing structure
     public int[] restrictedTallies(int[] continuing) {
         int[] res = new int[continuing.length];
-        HashMap<Integer,Integer> continuingMap = new HashMap<>();
-        for (int i=0;i<continuing.length;i++) continuingMap.put(continuing[i],i);
+        //HashMap<Integer,Integer> continuingMap = new HashMap<>();
+        Integer[] continuingMap = new Integer[Arrays.stream(continuing).max().orElse(0)+1];
+        for (int i=0;i<continuing.length;i++) continuingMap[continuing[i]]=i; // continuingMap.put(continuing[i],i);
         for (Vote v :votes) {
-            Integer c = v.topSubPreference(continuingMap);
+            Integer c = v.topSubPreferenceArray(continuingMap);
             if (c!=null) res[c]+=v.n;
         }
         return res;

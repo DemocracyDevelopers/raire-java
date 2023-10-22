@@ -43,4 +43,15 @@ public class Vote {
         }
         return null;
     }
+    /** find the highest preferenced candidate amongst the continuing candidates
+     return null or the argument of the hashmap for the key of the continuing candidate. */
+    public Integer topSubPreferenceArray(Integer[] continuing) {
+        for (final int c : prefs) {
+            if (c<continuing.length) {
+                Integer found = continuing[c];
+                if (found!=null) { return found; }
+            }
+        }
+        return null;
+    }
 }
