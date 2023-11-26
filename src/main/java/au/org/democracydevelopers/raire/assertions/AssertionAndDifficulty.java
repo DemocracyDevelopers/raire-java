@@ -17,12 +17,12 @@ import java.beans.ConstructorProperties;
 
 /** Simple tuple like structure */
 public class AssertionAndDifficulty {
-    public final Assertion assertion;
+    public final RaireAssertion assertion;
     public final double difficulty;
     public final int margin;
 
     @ConstructorProperties({"assertion","difficulty","margin"})
-    public AssertionAndDifficulty(Assertion assertion, double difficulty, int margin) {
+    public AssertionAndDifficulty(RaireAssertion assertion, double difficulty, int margin) {
         this.assertion = assertion;
         this.difficulty = difficulty;
         this.margin = margin;

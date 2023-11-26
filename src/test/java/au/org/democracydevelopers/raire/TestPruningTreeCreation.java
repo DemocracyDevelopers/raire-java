@@ -12,7 +12,7 @@
 
 package au.org.democracydevelopers.raire;
 
-import au.org.democracydevelopers.raire.assertions.Assertion;
+import au.org.democracydevelopers.raire.assertions.RaireAssertion;
 import au.org.democracydevelopers.raire.assertions.NotEliminatedBefore;
 import au.org.democracydevelopers.raire.assertions.NotEliminatedNext;
 import au.org.democracydevelopers.raire.pruning.HowFarToContinueSearchTreeWhenPruningAssertionFound;
@@ -33,8 +33,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class TestPruningTreeCreation {
     /// Get the assertions listed in "A guide to RAIRE".
-    Assertion[] raire_guide_assertions() {
-        return new Assertion[]{
+    RaireAssertion[] raire_guide_assertions() {
+        return new RaireAssertion[]{
                 new NotEliminatedNext(0,1,new int[]{0,1,2,3}),
                 new NotEliminatedNext(0,3,new int[]{0,2,3}),
                 new NotEliminatedNext(2,0,new int[]{0,2}),
@@ -46,7 +46,7 @@ public class TestPruningTreeCreation {
 
     @Test
     void tree_creation_correct() throws RaireException {
-        Assertion[] all_assertions = raire_guide_assertions();
+        RaireAssertion[] all_assertions = raire_guide_assertions();
         ArrayList<Integer> relevant_assertions = IntStream.range(0, all_assertions.length).boxed().collect(Collectors.toCollection(ArrayList::new)); // 0 to all_assertions.length
         TimeOut timeout = new TimeOut(1000L,null);
         TimeOut timeout_instantly = new TimeOut(1L,null);
