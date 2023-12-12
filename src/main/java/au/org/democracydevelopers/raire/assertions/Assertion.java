@@ -26,7 +26,7 @@ import java.util.Arrays;
         @JsonSubTypes.Type(value = NotEliminatedBefore.class, name = "NEB"),
         @JsonSubTypes.Type(value = NotEliminatedNext.class, name = "NEN")
 })
-public abstract class RaireAssertion {
+public abstract class Assertion {
     @JsonIgnore
     public abstract boolean isNEB();
     public abstract EffectOfAssertionOnEliminationOrderSuffix okEliminationOrderSuffix(int[] eliminationOrderSuffix);

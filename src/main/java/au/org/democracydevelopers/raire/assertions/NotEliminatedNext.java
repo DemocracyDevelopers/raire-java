@@ -26,7 +26,7 @@ import java.util.Arrays;
  *
  * This was called IRV in the original paper.
  */
-public class NotEliminatedNext extends RaireAssertion {
+public class NotEliminatedNext extends Assertion {
     public final int winner;
     public final int loser;
     /// sorted (ascending) list of continuing candidates.

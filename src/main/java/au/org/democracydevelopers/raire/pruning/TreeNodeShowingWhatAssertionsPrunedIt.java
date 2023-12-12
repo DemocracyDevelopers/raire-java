@@ -14,7 +14,7 @@ package au.org.democracydevelopers.raire.pruning;
 
 import au.org.democracydevelopers.raire.RaireError;
 import au.org.democracydevelopers.raire.RaireException;
-import au.org.democracydevelopers.raire.assertions.RaireAssertion;
+import au.org.democracydevelopers.raire.assertions.Assertion;
 import au.org.democracydevelopers.raire.time.TimeOut;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class TreeNodeShowingWhatAssertionsPrunedIt {
     /**
      * Create a new tree node with a given path back to the root and candidate being eliminated.
      */
-    public TreeNodeShowingWhatAssertionsPrunedIt(int[] parent_elimination_order_suffix, int candidate_being_eliminated_at_this_node, ArrayList<Integer> relevant_assertions, RaireAssertion[] all_assertions, int num_candidates, HowFarToContinueSearchTreeWhenPruningAssertionFound consider_children_of_eliminated_nodes, TimeOut timeout) throws RaireException {
+    public TreeNodeShowingWhatAssertionsPrunedIt(int[] parent_elimination_order_suffix, int candidate_being_eliminated_at_this_node, ArrayList<Integer> relevant_assertions, Assertion[] all_assertions, int num_candidates, HowFarToContinueSearchTreeWhenPruningAssertionFound consider_children_of_eliminated_nodes, TimeOut timeout) throws RaireException {
         this.candidate_being_eliminated_at_this_node = candidate_being_eliminated_at_this_node;
         if (timeout.quickCheckTimeout()) throw new RaireException(new RaireError.TimeoutTrimmingAssertions());
         final int[] elimination_order_suffix = new int[parent_elimination_order_suffix.length+1]; // candidate_being_eliminated_at_this_node prepended to parent_elimination_order_suffix

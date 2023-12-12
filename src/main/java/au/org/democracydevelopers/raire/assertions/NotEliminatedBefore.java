@@ -18,7 +18,7 @@ import au.org.democracydevelopers.raire.irv.Votes;
 import java.beans.ConstructorProperties;
 import java.util.stream.IntStream;
 
-public class NotEliminatedBefore extends RaireAssertion {
+public class NotEliminatedBefore extends Assertion {
     public final int winner;
     public final int loser;
 

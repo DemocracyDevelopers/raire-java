@@ -14,7 +14,7 @@ package au.org.democracydevelopers.raire.pruning;
 
 import au.org.democracydevelopers.raire.RaireError;
 import au.org.democracydevelopers.raire.RaireException;
-import au.org.democracydevelopers.raire.assertions.RaireAssertion;
+import au.org.democracydevelopers.raire.assertions.Assertion;
 import au.org.democracydevelopers.raire.assertions.AssertionAndDifficulty;
 import au.org.democracydevelopers.raire.assertions.NotEliminatedBefore;
 import au.org.democracydevelopers.raire.assertions.NotEliminatedNext;
@@ -114,7 +114,7 @@ public class HeuristicWorkOutWhichAssertionsAreUsed {
                 break;
         }
         // do the actual trimming
-        RaireAssertion[] all_assertions = assertions.stream().map(a->a.assertion).toArray(RaireAssertion[]::new);
+        Assertion[] all_assertions = assertions.stream().map(a->a.assertion).toArray(Assertion[]::new);
         ArrayList<Integer> all_assertion_indices = IntStream.range(0, all_assertions.length).boxed().collect(Collectors.toCollection(ArrayList::new)); // 0 to all_assertions.length
         HeuristicWorkOutWhichAssertionsAreUsed find_used = new HeuristicWorkOutWhichAssertionsAreUsed();
         ArrayList<TreeNodeShowingWhatAssertionsPrunedIt> trees=new ArrayList<>();
