@@ -55,12 +55,11 @@ public class RaireResult {
     }
 
     /** Used for building JSON objects when retrieving from the database */
-    @ConstructorProperties({"assertions","difficulty","margin","winner","num_candidates"})
-    public RaireResult(AssertionAndDifficulty[] assertions,double difficulty,int margin,int winner,int num_candidates) {
+    @ConstructorProperties({"assertions","difficulty","margin","num_candidates"})
+    public RaireResult(AssertionAndDifficulty[] assertions,double difficulty,int margin,int num_candidates) {
         this.assertions=assertions;
         this.difficulty=difficulty;
         this.margin=margin;
-        this.winner=winner;
         this.num_candidates=num_candidates;
     }
 
