@@ -70,14 +70,28 @@ class SequenceAndEffort implements Comparable<SequenceAndEffort> {
     /** Called when the only use for this is to take the assertion and add it to the list of assertions.
       This checks that it is not already there and removes elements from the frontier that obviously match it. */
     public void just_take_assertion(ArrayList<AssertionAndDifficulty> assertions, PriorityQueue<SequenceAndEffort> frontier) {
+        // If the assertion is already in the list, don't bother adding it again. Could be faster if a hash map is used, but complicates the Assertion classes, and is not a significant time sink.
         for (AssertionAndDifficulty a:assertions) {
             if (a.assertion.equals(best_assertion_for_ancestor.assertion)) {
                 return; // don't add assertion as it was already there.
             }
         }
-        int [] best_ancestor_pi = best_ancestor();
         // 15 F ← F \ {π ′ ∈ F | ba[π] is a suffix of π ′ }
-        // TODO frontier.retain(|s|!s.pi.ends_with(best_ancestor_pi));
+        // This step is just an optimization.
+        //  * 503, 482, 511 ms to run TestNSW with this,
+        //  * 508, 533, 510ms to run TestNSW without this. It is probably marginally useful.
+        final int [] best_ancestor_pi = best_ancestor();
+        final java.util.function.Predicate<SequenceAndEffort> isASuffixOfBestAncestorPi = new java.util.function.Predicate<SequenceAndEffort>() {
+            @Override
+            public boolean test(SequenceAndEffort s) {
+                int []pi = s.pi;
+                int offset = pi.length-best_ancestor_pi.length;
+                if (offset<0) return false;
+                for (int i=0;i<best_ancestor_pi.length;i++) if (pi[offset+i]!=best_ancestor_pi[i]) return false;
+                return true;
+            }
+        };
+        frontier.removeIf(isASuffixOfBestAncestorPi);
         // 14 A ← A ∪ {asr[ba[π]]}
         assertions.add(best_assertion_for_ancestor);
     }
