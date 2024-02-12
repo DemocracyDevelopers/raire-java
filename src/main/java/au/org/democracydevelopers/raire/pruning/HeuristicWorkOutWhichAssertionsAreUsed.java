@@ -29,7 +29,7 @@ import java.util.stream.IntStream;
 /**
  * A pretty simple method of computing which assertions are used which may not always
  * be optimal, but is fast, and, in practice, has turned out to be optimal for every case
- * I tried it on.
+ * we tried it on.
  *
  * The general problem can be converted to a problem of selection at least one of a combination
  * of expressions. The heuristic is a first pass choosing ones where there is no choice, and

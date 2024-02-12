@@ -23,17 +23,42 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.beans.ConstructorProperties;
 import java.util.Map;
 
+/** Defines a contest for which we want to generate assertions, metadata for that contest, and all algorithmic
+ * settings to be used by RAIRE when generating assertions. */
 public class RaireProblem {
+    /** The input to raire-java will contain metadata that, while not used by raire-java for computing assertions,
+     * may be useful information for assertion visualisation or information that election administrators would like
+     * to associate with any assertions generated. */
     public final Map<String,Object> metadata;
+
+    /** The consolidated set of votes cast in the election. Note that each Vote is a ranking and the number of times
+     * that ranking appeared on a vote cast in the contest. */
     public final Vote[] votes;
+
+    /** The number of candidates in the contest. */
     public final int num_candidates;
+
+    /** The reported winner of the contest (if provided as input to raire-java). If this information was not
+     * provided as input, this field will be null. */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public final Integer winner; // may be null.
+
+    /** The method that RAIRE should use to assess the difficulty of auditing a generated assertion. */
     public final AuditType audit;
+
+    /** The algorithm that raire-java will use to filter the set of generated assertions, removing those that
+     * are redundant. */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public final TrimAlgorithm trim_algorithm; // may be null.
+
+    /** An estimate of the expected overall difficulty of the audit, optionally provided as input. RAIRE may
+     * be able to use this estimate to generate assertions more efficiently. Note that the overall difficulty
+     * of an audit is the difficulty of the most-difficulty-to-audit-assertion generated. See AuditType and its
+     * implementations for more information on different approaches for computing assertion difficulty. */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public final Double difficulty_estimate; // may be null.
+
+    /** Optional time limit to impose across all stages of computation by raire-java. */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public final Double time_limit_seconds; // may be null.
 
@@ -49,6 +74,7 @@ public class RaireProblem {
         this.time_limit_seconds = time_limit_seconds;
     }
 
+    /** Generate assertions for the given contest, and return those assertions as a RaireSolution. */
     public RaireSolution solve() {
         RaireSolution.RaireResultOrError result;
         if (time_limit_seconds!=null && (time_limit_seconds <=0.0 || time_limit_seconds.isNaN() )) result=new RaireSolution.RaireResultOrError(new RaireError.InvalidTimeout());
