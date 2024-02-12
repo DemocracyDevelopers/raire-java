@@ -26,9 +26,12 @@ import java.util.PriorityQueue;
 class SequenceAndEffort implements Comparable<SequenceAndEffort> {
     /** an elimination order suffix that needs to be ruled out. */
     final int[] pi;
+
     final AssertionAndDifficulty best_assertion_for_ancestor;
+
     /** the best ancestor for pi will be a subset of pi, in particular the last best_ancestor_length elements of pi. */
     final int best_ancestor_length;
+
     /** if not null, then a dive has already been done on the specified candidate. */
     Integer dive_done;
 
