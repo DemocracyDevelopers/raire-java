@@ -18,7 +18,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.beans.ConstructorProperties;
 import java.util.Map;
 
+/** */
 public class RaireSolution {
+    /** A replication of the metadata provided in RaireProblem. This is designed to include
+     * information that is useful for election administrators or for assertion visualisation. */
     public final Map<String,Object> metadata;
     public final RaireResultOrError solution;
 

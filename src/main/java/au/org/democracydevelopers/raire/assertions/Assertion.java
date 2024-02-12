@@ -26,6 +26,8 @@ import java.util.Arrays;
         @JsonSubTypes.Type(value = NotEliminatedBefore.class, name = "NEB"),
         @JsonSubTypes.Type(value = NotEliminatedNext.class, name = "NEN")
 })
+
+/** RAIRE generates a set of assertions for a given contest. */
 public abstract class Assertion {
     @JsonIgnore
     public abstract boolean isNEB();

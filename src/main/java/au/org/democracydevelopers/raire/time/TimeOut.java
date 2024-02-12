@@ -17,15 +17,23 @@ package au.org.democracydevelopers.raire.time;
  * Allows efficient checking against clock time taken or work done.
  */
 public class TimeOut {
+    /** Record of the time at which computation, for which a time limit applies, began. */
     private final long start_time_ms;
+
+    /** Total work done thus far in units 'of work'. Note that work is incremented with each
+     * check on whether a timeout has occurred (see TimeOut::quickCheckTimeout()). */
     private long work_done;
+
+    /** Limit on 'work' done. */
     private final Long work_limit;
+
+    /** Limit on the time, in ms, allowed to RAIRE for its computation. */
     private final Long duration_limit_ms;
 
     /**  In case the clock is expensive to check, only check every UNITS_OF_WORK_PER_CLOCK_CHECK units of work. */
     public static final long UNITS_OF_WORK_PER_CLOCK_CHECK=100;
 
-    /** Make a new timeout structure. null entries mean that the duration doesn't apply */
+    /** Make a new timeout structure, null entries mean that the duration (time limit) doesn't apply. */
     public TimeOut(Long work_limit,Double duration_limit_seconds) {
         this.start_time_ms=System.currentTimeMillis();
         this.work_done=0;
@@ -33,21 +41,25 @@ public class TimeOut {
         this.duration_limit_ms=duration_limit_seconds==null?null:(long)Math.ceil(duration_limit_seconds*1000.0);
     }
 
-    /** make a dummy timer that will never timeout */
+    /** Make a dummy timer that will never timeout. */
     public static TimeOut never() { return new TimeOut(null,null); }
 
+    /** Return the time (in ms) since the timer */
     public long clockTimeTakenSinceStartMillis() { return System.currentTimeMillis()-start_time_ms; }
-    /** Get the total number of units of work done */
+
+    /** Get the total number of units of work done. */
     public long getWorkDone() { return work_done; }
 
+    /** Return the time taken (as a TimeTaken structure) by RAIRE thus far. This data structure
+     * indicates both the time and units of work consumed thus far by RAIRE. */
     public TimeTaken timeTaken() {
         return new TimeTaken(work_done,clockTimeTakenSinceStartMillis()/1000.0);
     }
 
     /**
-     * increments work_done by 1, and returns true if a limit is exceeded
-     * * only checks duration every 100 calls.
-     * @return true iff a limit is exceeded
+     * Increments work_done by 1, and returns true if a limit is exceeded.
+     * Only checks duration every 100 calls.
+     * @return true if and only if a time limit has been exceeded.
      */
     public boolean quickCheckTimeout() {
         work_done+=1;
