@@ -16,9 +16,17 @@ import java.beans.ConstructorProperties;
 import java.util.BitSet;
 import java.util.HashMap;
 
+/** RAIRE operates on a consolidated collection of votes cast in a given contest. This consolidated set of
+ * votes takes each unique ranking that appears on a vote in the contest, and counts the number of votes with that
+ * ranking. A 'Vote' is now defined by a ranking, and the number of times that ranking appears on a vote. This
+ * consolidation means that RAIRE can be more efficient by iterating over smallest set of votes than if we
+ * considered each ballot individually. */
 public class Vote {
-    public final int n; // The number of voters who voted this way
-    public final int[] prefs; //  prefs[0] is the first preferenced candidate.
+    /** The number of votes that expressed the ranking 'prefs' on their ballot. */
+    public final int n;
+
+    /** A preference ranking. Note that prefs[0] denotes the first (highest) ranked candidate. */
+    public final int[] prefs;
 
     @ConstructorProperties({"n","prefs"})
     public Vote(int n, int[] prefs) {
@@ -26,16 +34,16 @@ public class Vote {
         this.prefs = prefs;
     }
 
-    /** find the highest preferenced candidate amongst the continuing candidates
-     return null or a candidate index. */
+    /** Find the highest preferenced candidate on this vote amongst the given set of continuing candidates.
+     * return null or a candidate index. */
     public Integer topPreference(BitSet continuing) {
         for (final int c : prefs) {
             if (continuing.get(c)) { return c; }
         }
         return null;
     }
-    /** find the highest preferenced candidate amongst the continuing candidates
-      return null or the argument of the hashmap for the key of the continuing candidate. */
+    /** Find the highest preferenced candidate on this vote amongst the given set of continuing candidates.
+     * return null or the argument of the hashmap for the key of the continuing candidate. */
     public Integer topSubPreference(HashMap<Integer,Integer> continuing) {
         for (final int c : prefs) {
             Integer found = continuing.get(c);
@@ -43,8 +51,8 @@ public class Vote {
         }
         return null;
     }
-    /** find the highest preferenced candidate amongst the continuing candidates
-     return null or the argument of the hashmap for the key of the continuing candidate. */
+    /** Find the highest preferenced candidate on this vote amongst the given set of continuing candidates.
+     * return null or the argument of the hashmap for the key of the continuing candidate. */
     public Integer topSubPreferenceArray(Integer[] continuing) {
         for (final int c : prefs) {
             if (c<continuing.length) {
