@@ -14,10 +14,16 @@ package au.org.democracydevelopers.raire.audittype;
 
 import java.beans.ConstructorProperties;
 
-/* A MACRO ballot comparison audit as described in the original paper. */
+/** A MACRO ballot comparison audit as described in the paper "RAIRE: Risk-limiting audits for IRV elections",
+ * arXiv preprint arXiv:1903.08804. */
 public class BallotComparisonMACRO implements AuditType {
-    public final double confidence; // The desired confidence α. A number between 0 and 1 bounding the probability of not rejecting a false result.
-    public final double error_inflation_factor; // γ ≥ 1
+    /** The desired confidence α. A number between 0 and 1 bounding the probability of not rejecting a false result.*/
+    public final double confidence;
+
+    /** Gamma parameter: γ ≥ 1 */
+    public final double error_inflation_factor;
+
+    /** The total number of ballots in the auditing universe of the contest we are generating assertions for. */
     public final int total_auditable_ballots;
 
     @ConstructorProperties({"confidence","error_inflation_factor","total_auditable_ballots"})

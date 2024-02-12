@@ -18,7 +18,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * An audit type is a method for determining a difficulty (higher means more difficult, infinite means impossible) for
- * a comparison of two claimed tallys.
+ * a comparison of two claimed tallies. The method of computing the difficulty of an assertion depends
+ * in part on whether we are undertaking a ballot level comparison audit or a ballot polling audit. RAIRE uses
+ * a measure of assertion difficulty as a proxy for the number of ballots we would expect to sample to check the
+ * assertion during an RLA.
  */
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -31,7 +34,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public interface AuditType {
     /**
-     *
+     * Returns the difficulty associated with auditing an assertion for which the winner and loser
+     * have the provided tallies.
      * @param lowestTallyWinner the number of votes that the winner has
      * @param highestTallyLoser the number of votes that the loser has
      * @return a difficulty measure for the audit
