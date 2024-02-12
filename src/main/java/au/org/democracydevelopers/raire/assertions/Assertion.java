@@ -27,13 +27,23 @@ import java.util.Arrays;
         @JsonSubTypes.Type(value = NotEliminatedNext.class, name = "NEN")
 })
 
-/** RAIRE generates a set of assertions for a given contest. */
+/** RAIRE generates a set of assertions for a given contest. The different types of assertion
+ * that RAIRE can generate are defined as subclasses of this base Assertion class. */
 public abstract class Assertion {
+
+    /** Returns true if the assertion is a NotEliminatedBefore assertion. When filtering
+     * out redundant assertions in the final stage of computation, some trimming algorithms
+     * will need to know whether an assertion is an NEB or not. */
     @JsonIgnore
     public abstract boolean isNEB();
+
+    /** Given an elimination order suffix (a sequence of candidates that represents the ending of a
+     * set of possible elimination orders), this method checks whether this assertion rules out none, some,
+     * or all elimination orders that end in the suffix. Note that a suffix of [3, 2] represents the
+     * set of elimination orders that end with candidate '3' as the runner-up and '2' as the winner. */
     public abstract EffectOfAssertionOnEliminationOrderSuffix okEliminationOrderSuffix(int[] eliminationOrderSuffix);
 
-    /** given an elimination order suffix,
+    /** This method is used for testing purposes. Given an elimination order suffix,
       * let it through if it is allowed,
       * block if it is contradicted,
       * expand if it is not enough information.

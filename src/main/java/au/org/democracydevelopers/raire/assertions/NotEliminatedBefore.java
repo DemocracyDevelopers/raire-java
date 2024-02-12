@@ -18,6 +18,11 @@ import au.org.democracydevelopers.raire.irv.Votes;
 import java.beans.ConstructorProperties;
 import java.util.stream.IntStream;
 
+
+/** A NotEliminatedBefore assertion (or NEB) says that a candidate _winner_ will always have
+ * a higher tally than a candidate _loser_. What this means is that the minimum possible tally
+ * that _winner_ will have at any stage of tabulation is greater than the maximum possible
+ * tally _loser_ can ever achieve. For more detail on NEB assertions, refer to the Guide to RAIRE.*/
 public class NotEliminatedBefore extends Assertion {
     public final int winner;
     public final int loser;
@@ -52,7 +57,12 @@ public class NotEliminatedBefore extends Assertion {
         return EffectOfAssertionOnEliminationOrderSuffix.NeedsMoreDetail; // no information on relative order
     }
 
-    /** compute the difficulty and margin for this assertion. */
+    /** Compute and return the difficulty estimate associated with this assertion. This method
+     * computes the minimum tally of the assertion's winner (its first preference tally) and the
+     * maximum tally of the assertion's loser, according to the given set of Votes (votes). This
+     * maximum tally contains all votes that preference the loser higher than the winner, or on
+     * which the loser appears and the winner does not. The given AuditType, audit, defines the
+     * chosen method of computing assertion difficulty given these winner and loser tallies.*/
     public DifficultyAndMargin difficulty(Votes votes, AuditType audit) {
         int tallyWinner = votes.firstPreferenceOnlyTally(winner);
         int[] tallies = votes.restrictedTallies(new int[]{winner,loser});
@@ -62,8 +72,9 @@ public class NotEliminatedBefore extends Assertion {
     }
 
     /**
-     * Find the NEB assertion that best rules out the given candidate being the next eliminated, given that candidatesLaterInPi are the other continuing candidates.
-     * @return null or a finite difficulty assertion.
+     * Find the NEB assertion that best rules out the given candidate being the next eliminated, given that
+     * candidatesLaterInPi are the other continuing candidates.
+     * @return null or an assertion with an associated (finite) difficulty.
      */
     public static AssertionAndDifficulty findBestAssertion(int candidate, int[] candidatesLaterInPi, Votes votes, AuditType audit) {
         double bestDifficulty = Double.MAX_VALUE;
@@ -91,8 +102,9 @@ public class NotEliminatedBefore extends Assertion {
     }
 
     /**
-     * Find the NEB assertion that best rules out the given candidate being the next eliminated, given that candidatesLaterInPi are the other continuing candidates.
-     * @return null or a finite difficulty assertion.
+     * Find the NEB assertion that best rules out the given candidate being the next eliminated, given that
+     * candidatesLaterInPi are the other continuing candidates.
+     * @return null or an assertion with an associated (finite) difficulty.
      */
     public static AssertionAndDifficulty findBestAssertionUsingCache(int candidate, int[] candidatesLaterInPi, Votes votes, NotEliminatedBeforeCache cache) {
         double bestDifficulty = Double.MAX_VALUE;
