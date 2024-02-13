@@ -69,7 +69,7 @@ public abstract class RaireError {
     public static class TimeoutTrimmingAssertions extends RaireError {}
 
     /** If RAIRE determines that the contest has multiple possible winners consistent with
-     * the rules of IRV (ie. there is a tie) then the TiedWinners error will be generated.
+     * the rules of IRV (i.e. there is a tie) then the TiedWinners error will be generated.
      * While the particular legislation governing the contest may have unambiguous tie
      * resolution rules, there is no way that an RLA could be helpful if the contest comes
      * down to a tie resolution. */
@@ -99,14 +99,14 @@ public abstract class RaireError {
 
     /** Sanity checks are conducted in various locations in raire-java to ensure that
      * the code is operating as intended. An InternalErrorRuledOutWinner error will be
-     * generated is the set of generated assertions actually rule out the reported winner
-     * (ie. the assertions are invalid). */
+     * generated if the set of generated assertions actually rule out the reported winner
+     * (i.e. the assertions are invalid). */
     public static class InternalErrorRuledOutWinner extends RaireError {}
 
     /** Sanity checks are conducted in various locations in raire-java to ensure that
      * the code is operating as intended. An InternalErrorDidntRuleOutLoser error is
      * generated if the set of assertions formed does not rule out at least one
-     * reported loser (ie. the assertions are invalid). */
+     * reported loser (i.e. the assertions are invalid). */
     public static class InternalErrorDidntRuleOutLoser extends RaireError {}
 
     /** Sanity checks are conducted in various locations in raire-java to ensure that

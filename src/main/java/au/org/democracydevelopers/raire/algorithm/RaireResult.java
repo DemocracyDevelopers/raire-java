@@ -107,7 +107,8 @@ public class RaireResult {
      * @param audit Approach being used to measure the difficulty of an assertion.
      * @param trim_algorithm Approach to be used to filter redundant assertions.
      * @param timeout Time limits to be applied on all stages of computation by RAIRE.
-     * @throws RaireException
+     * @throws RaireException If it was impossible to create a suitable set of assertions. See RaireError for a
+     *                        list of possible causes.
      */
     public RaireResult(Votes votes, Integer claimed_winner, AuditType audit, TrimAlgorithm trim_algorithm,TimeOut timeout) throws RaireException {
         IRVResult irv_result = votes.runElection(timeout);

@@ -19,7 +19,7 @@ import java.util.HashMap;
 /** RAIRE operates on a consolidated collection of votes cast in a given contest. This consolidated set of
  * votes takes each unique ranking that appears on a vote in the contest, and counts the number of votes with that
  * ranking. A 'Vote' is now defined by a ranking, and the number of times that ranking appears on a vote. This
- * consolidation means that RAIRE can be more efficient by iterating over smallest set of votes than if we
+ * consolidation means that RAIRE can be more efficient by iterating over a smaller set of votes than if we
  * considered each ballot individually. */
 public class Vote {
     /** The number of votes that expressed the ranking 'prefs' on their ballot. */

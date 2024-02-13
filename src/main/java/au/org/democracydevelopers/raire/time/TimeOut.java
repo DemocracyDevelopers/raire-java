@@ -33,7 +33,11 @@ public class TimeOut {
     /**  In case the clock is expensive to check, only check every UNITS_OF_WORK_PER_CLOCK_CHECK units of work. */
     public static final long UNITS_OF_WORK_PER_CLOCK_CHECK=100;
 
-    /** Make a new timeout structure, null entries mean that the duration (time limit) doesn't apply. */
+    /** Make a new timeout structure, null entries mean that the particular limit doesn't apply.
+     * That is, if work_limit is null, but duration_limit_seconds is not null, then elapsed time
+     * will be a constraint but the amount of work done is not a constraint. Similarly, if duration_limit_seconds
+     * is null and work_limit is not, the clock time is irrelevant, and only work_limit matters. If
+     * both are null then timeouts will never occur. */
     public TimeOut(Long work_limit,Double duration_limit_seconds) {
         this.start_time_ms=System.currentTimeMillis();
         this.work_done=0;
@@ -59,7 +63,7 @@ public class TimeOut {
     /**
      * Increments work_done by 1, and returns true if a limit is exceeded.
      * Only checks duration every 100 calls.
-     * @return true if and only if a time limit has been exceeded.
+     * @return true if and only if a limit (time or work) has been exceeded.
      */
     public boolean quickCheckTimeout() {
         work_done+=1;

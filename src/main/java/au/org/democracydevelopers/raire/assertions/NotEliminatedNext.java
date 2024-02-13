@@ -36,7 +36,10 @@ public class NotEliminatedNext extends Assertion {
     /** Each NotEliminatedNext assertion has an associated context. This context is
      * a set of candidates that we assume are 'continuing' (have not yet been eliminated).
      * All candidates not in this list are assumed to have been already eliminated.
-     * Continuing candidates are sorted in ascending order of their identifier. */
+     * Continuing candidates are sorted in ascending order of their identifier.
+     *
+     * This ordering makes it easy to check if two assertions are actually the same, and
+     * it allows binary search for seeing if a particular candidate is in this list. */
     public final int[] continuing;
 
 

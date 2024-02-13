@@ -54,8 +54,8 @@ class SequenceAndEffort implements Comparable<SequenceAndEffort> {
     /** If not null, then a dive has already been done on the specified candidate. Diving is described in A Guide
      * to RAIRE Part 2. It is an algorthmic feature used to try and ascertain the overall difficulty of an audit
      * earlier in the process of searching for assertions. As RAIRE is searching for a set of assertions that will
-     * result in the easiest audit, knowing this information earlier in the process will allow RAIRE to avoid spending
-     * more time searching for better ways of ruling out alternate outcomes. */
+     * result in the easiest audit, knowing this information earlier in the process will allow RAIRE to avoid wasting
+     * time searching for unnecessarily good ways of ruling out alternate outcomes. */
     Integer dive_done;
 
     SequenceAndEffort(int[] pi, AssertionAndDifficulty best_assertion_for_ancestor, int best_ancestor_length, Integer dive_done) {
@@ -69,7 +69,7 @@ class SequenceAndEffort implements Comparable<SequenceAndEffort> {
      * RAIRE will store elimination order suffixes in a priority queue, ordered according to the difficulty of the best
      * known assertion to attack the suffix at some point. Each suffix is captured in this queue in the form of a
      * SequenceAndEffort object. We want the suffix that is currently most difficult to attack at the front of the queue.
-     * (ie. We want the inverse of the normal ordering on difficulty.)
+     * (i.e. We want the inverse of the normal ordering on difficulty.)
      *
      * This method compares this suffix with 'other' returning a negative integer result if this suffix has a higher
      * difficulty than other.
@@ -91,7 +91,7 @@ class SequenceAndEffort implements Comparable<SequenceAndEffort> {
     }
 
     /** Add a candidate to the front of the elimination order suffix 'pi', extending our search of the
-     * alternate outcome space, and returning a new suffix in the form of a SequenceAndEffot object. When
+     * alternate outcome space, and returning a new suffix in the form of a SequenceAndEffort object. When
      * we create a new suffix, we examine where in the suffix we can attack with the cheapest assertion. This
      * determines the best ancestor of the suffix and the assigned assertion.  */
     public SequenceAndEffort extend_by_candidate(int c, Votes votes, AuditType audit, NotEliminatedBeforeCache neb_cache) {
@@ -107,8 +107,15 @@ class SequenceAndEffort implements Comparable<SequenceAndEffort> {
     /** Called when we want to take the assertion attacking this elimination order suffix,
      * and add it to the list of assertions in our audit, 'assertions'. This method checks that the
      * assertion is not already in our audit. The method also looks for other suffixes in our priority queue (our
-     * frontier, as described in A Guide to RAIRE Part 2) that can be attacked by the assertion. Those
-     * suffixes will be removed from the frontier. */
+     * frontier, as described in A Guide to RAIRE Part 2) that can be obviously attacked by the assertion as
+     * the suffix ruled out by this assertion is a suffix of the element of the frontier. Those
+     * suffixes will be removed from the frontier.
+     *
+     * There may be other elements of the frontier that would be ruled out by the assertion,
+     * but checking for these would likely take longer than just leaving them in the frontier.
+     * Leaving them in is not a serious problem as they will be processed as soon as they come up
+     * without any further expansion as there will exist at least one assertion (i.e. this one) with
+     * a difficulty no higher than the highest seen so far (which includes this one). */
     public void just_take_assertion(ArrayList<AssertionAndDifficulty> assertions, PriorityQueue<SequenceAndEffort> frontier) {
         // If the assertion is already in the list, don't bother adding it again. Could be faster if a hash map is used, but complicates the Assertion classes, and is not a significant time sink.
         for (AssertionAndDifficulty a:assertions) {
