@@ -18,13 +18,18 @@ import au.org.democracydevelopers.raire.time.TimeOut;
 
 import java.util.*;
 
-/** Utility to solve all possible winners (counting ties) of an IRV election */
+/** Utility to find all possible winners (counting ties) of an IRV election. This class provides the
+ * functionality to tabulate an IRV contest. If there are ties at any stage of the tabulation, this
+ * functionality will determine all possible winners that may arise through different resolutions of those ties. */
 class IRVElectionWork {
-    private final ArrayList<Integer> elimination_order=new ArrayList<>(); // One order in which candidates are eliminated.
+    /** One possible order in which candidates may be eliminated. */
+    private final ArrayList<Integer> elimination_order=new ArrayList<>();
+
     /** Key is a list of continuing candidates, Value is a list of possible candidates who could win from that point. */
     private final HashMap<BitSet,int[]> winner_given_continuing_candidates=new HashMap<>();
 
-    /** Find all possible winners, trying all options with ties. */
+    /** Find all possible winners, trying all options with ties. Performs IRV tabulation within the context of a
+     * given time limit, a given set of Votes (votes), and a set of candidates assumed to be continuing.  */
     public int[] findAllPossibleWinners(int[] continuing, Votes votes, TimeOut timeout) throws RaireException {
         if (timeout.quickCheckTimeout()) throw new RaireException(new RaireError.TimeoutCheckingWinner());
         if (continuing.length==1) {

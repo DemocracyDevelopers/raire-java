@@ -17,6 +17,7 @@ import java.beans.ConstructorProperties;
 /** A comparison where the difficulty = 1/diluted margin.
    Useful for Ballot Comparison audits. */
 public class BallotComparisonOneOnDilutedMargin implements AuditType {
+    /** The total number of ballots in the auditing universe of the contest we are generating assertions for. */
     public final int total_auditable_ballots;
 
     @ConstructorProperties("total_auditable_ballots")

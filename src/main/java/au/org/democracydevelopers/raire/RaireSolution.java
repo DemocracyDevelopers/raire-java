@@ -18,8 +18,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.beans.ConstructorProperties;
 import java.util.Map;
 
+/** */
 public class RaireSolution {
+    /** A replication of the metadata provided in RaireProblem. This is designed to include
+     * information that is useful for election administrators (to associate with generated assertions)
+     * or for assertion visualisation. */
     public final Map<String,Object> metadata;
+
+    /** If no error arose during assertion generation, this attribute will store the set of generated
+     * assertions in the form of a RaireResult. Otherwise, it will provide information on the error
+     * in the form of a RaireError. */
     public final RaireResultOrError solution;
 
     @ConstructorProperties({"metadata","solution"})
@@ -29,7 +37,8 @@ public class RaireSolution {
     }
 
 
-    /// A wrapper around the Rust Error type. Exactly one of the fields will be null.
+    /** A wrapper around the outcome of RAIRE. The outcome is either a RaireResult (if no error arose) or
+     * a RaireError (if an error did arise). Exactly one of the fields will be null. */
     public static class RaireResultOrError {
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public final RaireResult Ok;

@@ -34,32 +34,84 @@ import java.util.stream.StreamSupport;
 @JsonSerialize(using= RaireError.RaireErrorSerializer.class)
 @JsonDeserialize(using = RaireError.RaireErrorDeserializer.class)
 public abstract class RaireError {
+    /** The RAIRE algorithm is given a time limit in seconds to limit its runtime.
+     * If a negative or NaN value is provided as the time limit, then the InvalidTimout
+     * error is generated. */
     public static class InvalidTimeout extends RaireError {}
+
+    /** RAIRE treats votes as a list of integers between 0 (inclusive) and the number of
+     * candidates (exclusive). If any vote provided to raire-java, has some other (invalid)
+     * integer an InvalidCandidateNumber error is generated. */
     public static class InvalidCandidateNumber extends RaireError {}
+
+    /** There are three stages of computation involved in assertion generation, the
+     * first of which is finding out who won (usually very fast). However, if
+     * this step exceeds the provided time limit then the TimeoutCheckingWinner error
+     * will be generated. All three stages must be completed within the specified time limit
+     * or a relevant timeout error will be generated. */
     public static class TimeoutCheckingWinner extends RaireError {}
+
+    /** If assertion generation (usually the slowest of the three stages of computation)
+     * does not complete within the specified time limit, the TimeoutFindingAssertions error
+     * will be generated. All three stages must be completed within the specified time limit
+     * or a relevant timeout error will be generated. */
     public static class TimeoutFindingAssertions extends RaireError { final double difficultyAtTimeOfStopping;
         public TimeoutFindingAssertions(double difficultyAtTimeOfStopping) {
             this.difficultyAtTimeOfStopping = difficultyAtTimeOfStopping;
         }
     }
+
+    /** After generating assertions, a filtering stage will occur in which redundant
+     * assertions are removed from the final set. This stage is usually reasonably fast.
+     * However, if this stage does not complete within the specified time limit, the
+     * TimeoutTrimmingAssertions error will be generated. All three stages must be completed
+     * within the specified time limit or a relevant timeout error will be generated.*/
     public static class TimeoutTrimmingAssertions extends RaireError {}
+
+    /** If RAIRE determines that the contest has multiple possible winners consistent with
+     * the rules of IRV (i.e. there is a tie) then the TiedWinners error will be generated.
+     * While the particular legislation governing the contest may have unambiguous tie
+     * resolution rules, there is no way that an RLA could be helpful if the contest comes
+     * down to a tie resolution. */
     public static class TiedWinners extends RaireError { final int[] expected;
         public TiedWinners(int[] expected) {
             this.expected = expected;
         }
     }
+
+    /** If RAIRE is called with a specified winner, and upon checking RAIRE determines
+     * that the provided winner does not match the votes (according to its own tabulation),
+     * the WrongWinner error will be generated. */
     public static class WrongWinner extends RaireError { final int[] expected;
         public WrongWinner(int[] expected) {
             this.expected = expected;
         }
     }
+
+    /** If RAIRE determines that it is not possible to compute a set of assertions because
+     * there are no assertions that would rule out a particular elimination order, then a
+     * CouldNotRuleOut error is generated. */
     public static class CouldNotRuleOut extends RaireError { final int[] eliminationOrder;
         public CouldNotRuleOut(int[] eliminationOrder) {
             this.eliminationOrder = eliminationOrder;
         }
     }
+
+    /** Sanity checks are conducted in various locations in raire-java to ensure that
+     * the code is operating as intended. An InternalErrorRuledOutWinner error will be
+     * generated if the set of generated assertions actually rule out the reported winner
+     * (i.e. the assertions are invalid). */
     public static class InternalErrorRuledOutWinner extends RaireError {}
+
+    /** Sanity checks are conducted in various locations in raire-java to ensure that
+     * the code is operating as intended. An InternalErrorDidntRuleOutLoser error is
+     * generated if the set of assertions formed does not rule out at least one
+     * reported loser (i.e. the assertions are invalid). */
     public static class InternalErrorDidntRuleOutLoser extends RaireError {}
+
+    /** Sanity checks are conducted in various locations in raire-java to ensure that
+     * the code is operating as intended. An InternalErrorTrimming error is generated
+     * if a problem has arisen during the filtering of redundant assertions. */
     public static class InternalErrorTrimming extends RaireError {}
 
 

@@ -12,10 +12,11 @@
 
 package au.org.democracydevelopers.raire.irv;
 
-/** The result of an IRV election. */
+/** The result (outcome) of an IRV election. */
 public class IRVResult {
     /** Possible winners under IRV with no tie resolution. There may be tie resolution rules, but such a close election is not auditable stochastically. */
     public final int[] possibleWinners;
+
     /** A possible elimination order */
     public final int[] eliminationOrder;
 

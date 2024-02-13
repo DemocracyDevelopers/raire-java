@@ -12,7 +12,7 @@
 
 package au.org.democracydevelopers.raire.assertions;
 
-/** A named tuple containing a difficulty score and the associated margin */
+/** A named tuple containing a difficulty score and the associated margin. */
 public class DifficultyAndMargin {
     public final double difficulty;
     public final int margin;

@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * A simple program to execute the RAIRE algorithm on a JSON file producing a JSON file
+ * A simple program to execute the RAIRE algorithm on a JSON file producing a JSON file.
  */
 public class CommandLine {
     public static void main(String[] args) throws Exception {

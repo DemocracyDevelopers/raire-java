@@ -15,10 +15,21 @@ package au.org.democracydevelopers.raire.assertions;
 
 import java.beans.ConstructorProperties;
 
-/** Simple tuple like structure */
+/** Simple tuple like structure that stores an Assertion alongside its difficulty and margin.
+ * The difficulty of an assertion is a measure that reflects how much auditing effort is required
+ * to check the assertion in an RLA. We expect that assertions with a higher difficulty will require
+ * more ballot samples to check. A range of possible difficulty measures can be used by RAIRE (see
+ * the AuditType interface and its implementations). */
 public class AssertionAndDifficulty {
     public final Assertion assertion;
+
+    /** A measure of how hard this assertion will be to audit. Assertions with a higher difficulty
+     * will require more ballot samples to check in an audit. */
     public final double difficulty;
+
+    /** Each assertion has a winner, a loser, and a context which determines whether a given
+     * votes falls into the winner's pile or the loser's. The margin of the assertion is equal to
+     * the difference in these tallies. */
     public final int margin;
 
     @ConstructorProperties({"assertion","difficulty","margin"})

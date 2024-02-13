@@ -20,8 +20,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 
+/** This class stores the set of consolidated votes cast in the contest we are generating assertions for. A
+ * consolidated votes defines a ranking and the number of times that ranking appears on a vote cast in the contest. */
 public class Votes {
+    /** Consolidated set of votes cast in a contest. */
     public final Vote[] votes;
+
+    /** Array, indexed by candidate number, indicating the first preference tally of each candidate in the contest. */
     private final int[] firstPreferenceVotes;
 
     public Votes(Vote[] votes, int numCandidates) throws RaireException {
@@ -36,9 +41,11 @@ public class Votes {
         }
     }
 
+    /** Return the first preference tally for the given candidate. */
     public int firstPreferenceOnlyTally(int candidate) { return firstPreferenceVotes[candidate]; }
 
-    /// Get the tallies for continuing candidates, returning a vector of the same length and order as the continuing structure
+    /** Get the tallies for each continuing candidate in the given array (continuing), returning an array of the same
+     * length and order as the continuing structure. */
     public int[] restrictedTallies(int[] continuing) {
         int[] res = new int[continuing.length];
         //HashMap<Integer,Integer> continuingMap = new HashMap<>();
@@ -51,6 +58,7 @@ public class Votes {
         return res;
     }
 
+    /** Computes and returns the total number of votes cast in the contest. */
     public int totalVotes() {
         int res = 0;
         for (Vote v : votes) {
@@ -59,9 +67,11 @@ public class Votes {
         return res;
     }
 
+    /** Returns the total number of candidates in the contest. */
     public int numCandidates() { return firstPreferenceVotes.length; }
 
-    /// only possible error is RaireError::TimeoutCheckingWinner
+    /** Tabulates the outcome of the IRV election, returning the outcome as an IRVResult. The only
+     * error that may arise during tabulation is a RaireError::TimeoutCheckingWinner exception. */
     public IRVResult runElection(TimeOut timeout) throws RaireException {
         IRVElectionWork work = new IRVElectionWork();
         int[] all_candidates = IntStream.range(0,numCandidates()).toArray();

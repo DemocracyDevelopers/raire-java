@@ -15,6 +15,11 @@ package au.org.democracydevelopers.raire.assertions;
 import au.org.democracydevelopers.raire.audittype.AuditType;
 import au.org.democracydevelopers.raire.irv.Votes;
 
+/** At the start of the RAIRE algorithm, we compute the difficulty and margins of all possible
+ * NotEliminatedBefore assertions that we can form between pairs of candidates. We remember this
+ * information so that when we are faced with an elimination order we want to rule out, and a candidate
+ * NEB assertion, we can look up its difficulty and margin without having to recompute them. The
+ * NotEliminatedBeforeCaches stores difficulty and margin information for candidate NEB assertions. */
 public class NotEliminatedBeforeCache {
     public final DifficultyAndMargin[][] cache;
 
@@ -27,5 +32,6 @@ public class NotEliminatedBeforeCache {
         }
     }
 
+    /** Return the difficulty and margin associated with a given NEB assertion (entry). */
     public DifficultyAndMargin difficulty(NotEliminatedBefore entry) { return cache[entry.winner][entry.loser]; }
 }

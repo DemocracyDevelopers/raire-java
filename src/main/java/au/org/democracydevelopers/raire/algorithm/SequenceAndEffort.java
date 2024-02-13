@@ -23,13 +23,39 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.PriorityQueue;
 
+/**
+ * This class refers to an elimination order suffix as 'pi'. This represents a set of possible elimination orders that
+ * have a particular ending (eg. pi = [2, 3, 1] is a suffix that captures all elimination orders that end with candidate
+ * '1' as the winner, '3' as the runner-up and '2' as the candidate eliminated when only '2', '3' and '1' remain. RAIRE
+ * needs to generate assertions that rule out all elimination orders that end in someone other than the reported
+ * winner. To do this, RAIRE will generate assertions to rule out a set of elimination order suffixes, where together,
+ * those suffixes capture all possible elimination orders with an alternate winner.
+ *
+ * This class considers a specific elimination order suffix -- a (potentially partial) branch or path in the tree of
+ * alternate elimination orders that RAIRE is searching through in order to find assertions to rule out all branches.
+ * For any given branch, RAIRE keeps track of the current 'best known' way of ruling out that branch with an assertion.
+ * The point in the branch that the assertion attacks is called the 'best ancestor'. This class stores the assertion
+ * attacking the branch at this point in the attribute 'best_assertion_for_ancestor' and indicates the point in the
+ * branch being attacked in the attribute 'best_ancestor_length'.
+ * */
 class SequenceAndEffort implements Comparable<SequenceAndEffort> {
-    /** an elimination order suffix that needs to be ruled out. */
+    /** An elimination order suffix that needs to be ruled out. */
     final int[] pi;
+
+    /** The best ancestor for the given suffix 'pi' refers to the point in the suffix that we can attack most cheaply
+     * with an assertion. The best assertion we have been found to perform this attack is stored in this attribute. */
     final AssertionAndDifficulty best_assertion_for_ancestor;
-    /** the best ancestor for pi will be a subset of pi, in particular the last best_ancestor_length elements of pi. */
+
+    /** The best ancestor for pi will be a subset of pi, in particular the last 'best_ancestor_length' elements of pi.
+     * This attribute is essentially telling us the point in the elimination order suffix 'pi' we are attacking with the
+     * assertion 'best_assertion_for_ancestor'. */
     final int best_ancestor_length;
-    /** if not null, then a dive has already been done on the specified candidate. */
+
+    /** If not null, then a dive has already been done on the specified candidate. Diving is described in A Guide
+     * to RAIRE Part 2. It is an algorthmic feature used to try and ascertain the overall difficulty of an audit
+     * earlier in the process of searching for assertions. As RAIRE is searching for a set of assertions that will
+     * result in the easiest audit, knowing this information earlier in the process will allow RAIRE to avoid wasting
+     * time searching for unnecessarily good ways of ruling out alternate outcomes. */
     Integer dive_done;
 
     SequenceAndEffort(int[] pi, AssertionAndDifficulty best_assertion_for_ancestor, int best_ancestor_length, Integer dive_done) {
@@ -39,9 +65,13 @@ class SequenceAndEffort implements Comparable<SequenceAndEffort> {
         this.dive_done = dive_done;
     }
 
-    /** We want this in a priority queue which has the smallest at the head. Since
-     * we want the highest difficulty at the head, we want the inverse of the normal
-     * ordering on difficulty. We want a negative integer result if this has a higher
+    /**
+     * RAIRE will store elimination order suffixes in a priority queue, ordered according to the difficulty of the best
+     * known assertion to attack the suffix at some point. Each suffix is captured in this queue in the form of a
+     * SequenceAndEffort object. We want the suffix that is currently most difficult to attack at the front of the queue.
+     * (i.e. We want the inverse of the normal ordering on difficulty.)
+     *
+     * This method compares this suffix with 'other' returning a negative integer result if this suffix has a higher
      * difficulty than other.
      */
     @Override
@@ -49,14 +79,21 @@ class SequenceAndEffort implements Comparable<SequenceAndEffort> {
         return Double.compare(other.best_assertion_for_ancestor.difficulty, best_assertion_for_ancestor.difficulty);
     }
 
+
+    /** Returns the difficulty of the assertion being used to attack this elimination order suffix. */
     public double difficulty() { return best_assertion_for_ancestor.difficulty; }
 
 
-    /** get the best ancestor of pi, which is a subset of pi. */
+    /** Get the best ancestor of the elimination order suffix pi, which is a subset of pi. Recall that
+     * the best ancestor is the point in the suffix that we can attack most cheaply with an assertion. */
     public int[] best_ancestor() {
         return Arrays.copyOfRange(pi,pi.length-best_ancestor_length,pi.length);
     }
 
+    /** Add a candidate to the front of the elimination order suffix 'pi', extending our search of the
+     * alternate outcome space, and returning a new suffix in the form of a SequenceAndEffort object. When
+     * we create a new suffix, we examine where in the suffix we can attack with the cheapest assertion. This
+     * determines the best ancestor of the suffix and the assigned assertion.  */
     public SequenceAndEffort extend_by_candidate(int c, Votes votes, AuditType audit, NotEliminatedBeforeCache neb_cache) {
         int [] pi_prime=new int[pi.length+1]; // π ′ ← [c] ++π
         pi_prime[0]=c;
@@ -67,8 +104,18 @@ class SequenceAndEffort implements Comparable<SequenceAndEffort> {
         return new SequenceAndEffort(pi_prime,best_assertion_for_ancestor,best_ancestor_length,null);
     }
 
-    /** Called when the only use for this is to take the assertion and add it to the list of assertions.
-      This checks that it is not already there and removes elements from the frontier that obviously match it. */
+    /** Called when we want to take the assertion attacking this elimination order suffix,
+     * and add it to the list of assertions in our audit, 'assertions'. This method checks that the
+     * assertion is not already in our audit. The method also looks for other suffixes in our priority queue (our
+     * frontier, as described in A Guide to RAIRE Part 2) that can be obviously attacked by the assertion as
+     * the suffix ruled out by this assertion is a suffix of the element of the frontier. Those
+     * suffixes will be removed from the frontier.
+     *
+     * There may be other elements of the frontier that would be ruled out by the assertion,
+     * but checking for these would likely take longer than just leaving them in the frontier.
+     * Leaving them in is not a serious problem as they will be processed as soon as they come up
+     * without any further expansion as there will exist at least one assertion (i.e. this one) with
+     * a difficulty no higher than the highest seen so far (which includes this one). */
     public void just_take_assertion(ArrayList<AssertionAndDifficulty> assertions, PriorityQueue<SequenceAndEffort> frontier) {
         // If the assertion is already in the list, don't bother adding it again. Could be faster if a hash map is used, but complicates the Assertion classes, and is not a significant time sink.
         for (AssertionAndDifficulty a:assertions) {
@@ -96,7 +143,9 @@ class SequenceAndEffort implements Comparable<SequenceAndEffort> {
         assertions.add(best_assertion_for_ancestor);
     }
 
-    /** Called when a sequence has gone as far as it can - i.e. all candidates are in the exclusion order list. Returns the new lower bound, or throws an exception. */
+    /** Called when a sequence has gone as far as it can - i.e. we have reached a 'leaf', where all candidates are in
+     * the exclusion order list 'pi'. Returns a new lower bound (on the cost of the overall audit), or throws an
+     * exception if we could not rule out the alternate outcome defined by the candidate sequence. */
     public double contains_all_candidates(ArrayList<AssertionAndDifficulty> assertions, PriorityQueue<SequenceAndEffort> frontier,double lower_bound) throws RaireException {
         if (Double.isInfinite(difficulty())) { // 23 if (ASN (asr[ba[π ′ ]]) = ∞):
             //println!("Couldn't deal with {:?}",new_sequence.pi);

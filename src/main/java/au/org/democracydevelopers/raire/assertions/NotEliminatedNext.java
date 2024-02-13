@@ -24,12 +24,22 @@ import java.util.Arrays;
  *
  * In particular, this means that _winner_ can not be the next candidate eliminated.
  *
- * This was called IRV in the original paper.
+ * This assertion type is also referred to as an NEN assertion in A Guide to RAIRE.
  */
 public class NotEliminatedNext extends Assertion {
+    /** The winning candidate of this NotEliminatedNext assertion. */
     public final int winner;
+
+    /** The losing candidate of this NotEliminatedNext assertion. */
     public final int loser;
-    /// sorted (ascending) list of continuing candidates.
+
+    /** Each NotEliminatedNext assertion has an associated context. This context is
+     * a set of candidates that we assume are 'continuing' (have not yet been eliminated).
+     * All candidates not in this list are assumed to have been already eliminated.
+     * Continuing candidates are sorted in ascending order of their identifier.
+     *
+     * This ordering makes it easy to check if two assertions are actually the same, and
+     * it allows binary search for seeing if a particular candidate is in this list. */
     public final int[] continuing;
 
 
@@ -49,6 +59,11 @@ public class NotEliminatedNext extends Assertion {
         } else { return false; }
     }
 
+    /** Compute and return the difficulty estimate associated with this assertion. This method
+     * computes the tallies of the assertion's winner and loser, in the relevant context,
+     * according to the set of Votes (votes) provided as input. The given AuditType, audit,
+     * defines the chosen method of computing assertion difficulty given these winner and loser
+     * tallies.*/
     public double difficulty(Votes votes,AuditType audit) {
         int[] tallies = votes.restrictedTallies(continuing);
         int tally_winner = Integer.MAX_VALUE;
@@ -60,7 +75,10 @@ public class NotEliminatedNext extends Assertion {
         return audit.difficulty(tally_winner, tally_loser);
     }
 
-    /** Find the best NEN cote to rule out winner from being the next eliminated when only the given candidates are continuing. May return null if none exist. continuing must include winner. */
+    /** Find the best NEN assertion that will rule out the outcome where the given winner is eliminated
+     * next when only the specified candidates are continuing, on the basis of the set of Votes (votes)
+     * cast in the contest and the chosen method of computing assertion difficulty (audit). May return null
+     * if no such assertions exist. The 'continuing' candidates must include the given winner.  */
     public static AssertionAndDifficulty findBestDifficulty(Votes votes, AuditType audit, int [] continuing, int winner)  {
         int[] tallies = votes.restrictedTallies(continuing);
         int tally_winner = Integer.MAX_VALUE;
@@ -78,7 +96,7 @@ public class NotEliminatedNext extends Assertion {
         } else { return null; }
     }
 
-    /** See if the given candidate is in the continuing list */
+    /** Returns true if the given candidate is in this assertion's continuing list. */
     private boolean isContinuing(int c) {
         return Arrays.binarySearch(continuing,c)>=0;
     }

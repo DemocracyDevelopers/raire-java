@@ -14,9 +14,10 @@ package au.org.democracydevelopers.raire.audittype;
 
 import java.beans.ConstructorProperties;
 
-/** A comparison where the difficulty = 1/diluted margin^2.
+/** A comparison where the difficulty = 1/(diluted margin^2).
    Useful for Ballot Polling audits. */
 public class BallotComparisonOneOnDilutedMarginSquared implements AuditType {
+    /** The total number of ballots in the auditing universe of the contest we are generating assertions for. */
     public final int total_auditable_ballots;
 
     @ConstructorProperties("total_auditable_ballots")

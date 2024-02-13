@@ -12,16 +12,20 @@
 
 package au.org.democracydevelopers.raire.assertions;
 
-/// An elimination order will be either compatible with a suffix or not.
-/// A suffix of an elimination order may be compatible or not or it may just not have enough information to be sure.
+/** An elimination order will be either compatible with a suffix or not. For any given elimination order,
+ * a suffix contains its 'tail-end'. For example, for the elimination order 1, 4, 0, 3, 2, one possible
+ * suffix is [0, 3, 2]. Another is [3, 2]. For a given suffix, an assertion will either: rule out all
+ * elimination orders that end in the suffix (Contradiction); rule out some elimination orders that end in
+ * the suffix (NeedsMoreDetail); rule out none of the elimination orders that end in the suffix (Ok).
+ */
 public enum EffectOfAssertionOnEliminationOrderSuffix {
-    /// The suffix is ruled out by the assertion, regardless of the rest of the elimination order.
+    /** The suffix is ruled out by the assertion, regardless of the rest of the elimination order.*/
     Contradiction,
-    /// The suffix is ok as far as the assertion is concerned, no more information needed.
-    /// This could mean that the suffix agrees with the assertion, or the assertion only applies to different suffixes.
-    /// Regardless, whatever the rest of the elimiation order, the assertion will be fine with this.
+    /** The suffix is ok as far as the assertion is concerned, no more information needed.
+     * This could mean that the suffix agrees with the assertion, or the assertion only applies to different suffixes.
+     * Regardless, whatever the rest of the elimination order, the assertion will be fine with this. */
     Ok,
-    /// Some elimination orders ending with this suffix are OK, others are contradicted.
+    /** Some elimination orders ending with this suffix are OK, others are contradicted. */
     NeedsMoreDetail,
 }
 
