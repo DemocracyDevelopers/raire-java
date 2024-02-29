@@ -56,6 +56,7 @@ public class TestSerialization {
     @Test
     void testErrorSerialization() throws JsonProcessingException {
         assertEquals("{\"Err\":\"InvalidTimeout\"}",mapper.writeValueAsString(new RaireSolution.RaireResultOrError(new RaireError.InvalidTimeout())));
+        assertEquals("{\"Err\":\"InvalidNumberOfCandidates\"}",mapper.writeValueAsString(new RaireSolution.RaireResultOrError(new RaireError.InvalidNumberOfCandidates())));
         assertEquals("{\"Err\":\"InvalidCandidateNumber\"}",mapper.writeValueAsString(new RaireSolution.RaireResultOrError(new RaireError.InvalidCandidateNumber())));
         assertEquals("{\"Err\":\"TimeoutCheckingWinner\"}",mapper.writeValueAsString(new RaireSolution.RaireResultOrError(new RaireError.TimeoutCheckingWinner())));
         assertEquals("{\"Err\":{\"TimeoutFindingAssertions\":3.0}}",mapper.writeValueAsString(new RaireSolution.RaireResultOrError(new RaireError.TimeoutFindingAssertions(3.0))));
