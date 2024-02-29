@@ -12,7 +12,6 @@
 
 package au.org.democracydevelopers.raire;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -34,6 +33,11 @@ import java.util.stream.StreamSupport;
 @JsonSerialize(using= RaireError.RaireErrorSerializer.class)
 @JsonDeserialize(using = RaireError.RaireErrorDeserializer.class)
 public abstract class RaireError {
+    /** The RAIRE algorithm is given an integer number of candidates. This must be at least one.
+     * If a negative or 0 value is provided as the number of candidates, then the InvalidNumberOfCandidates
+     * error is generated. Don't get this confused with the InvalidCandidateNumber error below, which is a
+     * vote for a candidate who doesn't exist. */
+    public static class InvalidNumberOfCandidates extends RaireError {}
     /** The RAIRE algorithm is given a time limit in seconds to limit its runtime.
      * If a negative or NaN value is provided as the time limit, then the InvalidTimout
      * error is generated. */
@@ -130,6 +134,7 @@ public abstract class RaireError {
         public void serialize(RaireError raireError, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
             // first consider the errors that are serialized as a simple string
             if (raireError instanceof InvalidTimeout) jsonGenerator.writeString("InvalidTimeout");
+            else if (raireError instanceof InvalidNumberOfCandidates) jsonGenerator.writeString("InvalidNumberOfCandidates");
             else if (raireError instanceof InvalidCandidateNumber) jsonGenerator.writeString("InvalidCandidateNumber");
             else if (raireError instanceof TimeoutCheckingWinner) jsonGenerator.writeString("TimeoutCheckingWinner");
             else if (raireError instanceof TimeoutTrimmingAssertions) jsonGenerator.writeString("TimeoutTrimmingAssertions");
@@ -163,6 +168,7 @@ public abstract class RaireError {
                 String text = node.asText();
                 switch (text) {
                     case "InvalidTimeout" : return new RaireError.InvalidTimeout();
+                    case "InvalidNumberOfCandidates" : return new RaireError.InvalidNumberOfCandidates();
                     case "InvalidCandidateNumber" : return new RaireError.InvalidCandidateNumber();
                     case "TimeoutCheckingWinner" : return new RaireError.TimeoutCheckingWinner();
                     case "TimeoutTrimmingAssertions" : return new RaireError.TimeoutTrimmingAssertions();
