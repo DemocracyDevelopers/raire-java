@@ -59,7 +59,7 @@ public abstract class RaireError {
      * does not complete within the specified time limit, the TimeoutFindingAssertions error
      * will be generated. All three stages must be completed within the specified time limit
      * or a relevant timeout error will be generated. */
-    public static class TimeoutFindingAssertions extends RaireError { final double difficultyAtTimeOfStopping;
+    public static class TimeoutFindingAssertions extends RaireError { public final double difficultyAtTimeOfStopping;
         public TimeoutFindingAssertions(double difficultyAtTimeOfStopping) {
             this.difficultyAtTimeOfStopping = difficultyAtTimeOfStopping;
         }
@@ -77,7 +77,7 @@ public abstract class RaireError {
      * While the particular legislation governing the contest may have unambiguous tie
      * resolution rules, there is no way that an RLA could be helpful if the contest comes
      * down to a tie resolution. */
-    public static class TiedWinners extends RaireError { final int[] expected;
+    public static class TiedWinners extends RaireError { public final int[] expected;
         public TiedWinners(int[] expected) {
             this.expected = expected;
         }
@@ -86,7 +86,7 @@ public abstract class RaireError {
     /** If RAIRE is called with a specified winner, and upon checking RAIRE determines
      * that the provided winner does not match the votes (according to its own tabulation),
      * the WrongWinner error will be generated. */
-    public static class WrongWinner extends RaireError { final int[] expected;
+    public static class WrongWinner extends RaireError { public final int[] expected;
         public WrongWinner(int[] expected) {
             this.expected = expected;
         }
@@ -95,7 +95,7 @@ public abstract class RaireError {
     /** If RAIRE determines that it is not possible to compute a set of assertions because
      * there are no assertions that would rule out a particular elimination order, then a
      * CouldNotRuleOut error is generated. */
-    public static class CouldNotRuleOut extends RaireError { final int[] eliminationOrder;
+    public static class CouldNotRuleOut extends RaireError { public final int[] eliminationOrder;
         public CouldNotRuleOut(int[] eliminationOrder) {
             this.eliminationOrder = eliminationOrder;
         }
