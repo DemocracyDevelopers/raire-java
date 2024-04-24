@@ -34,7 +34,7 @@ java -jar target/raire-java-1.0-SNAPSHOT-jar-with-dependencies.jar ../raire-rs/W
 
 ## Copyright
 
-This program is Copyright 2023 Democracy Developers.
+This program is Copyright 2023-2024 Democracy Developers.
 It is based on software (c) Michelle Blom in C++ https://github.com/michelleblom/audit-irv-cp/tree/raire-branch
 
 This file is part of raire-java.

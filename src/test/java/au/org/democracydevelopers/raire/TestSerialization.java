@@ -12,9 +12,14 @@
 
 package au.org.democracydevelopers.raire;
 
+import au.org.democracydevelopers.raire.assertions.Assertion;
+import au.org.democracydevelopers.raire.assertions.AssertionAndDifficulty;
+import au.org.democracydevelopers.raire.assertions.NotEliminatedBefore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -89,4 +94,29 @@ public class TestSerialization {
     }
 
 
+    /**
+     * Test serialization/deserialization of AssertionAndDifficulty focussing on status by
+     * serializing and then deserializing and checking is the same.
+     */
+    @Test
+    void testAssertionAndDifficultyStatus() throws JsonProcessingException {
+        Assertion a = new NotEliminatedBefore(0,1);
+        AssertionAndDifficulty noStatus = new AssertionAndDifficulty(a,2.0,7);
+        AssertionAndDifficulty noStatusS = mapper.readValue(mapper.writeValueAsString(noStatus), AssertionAndDifficulty.class);
+        assertTrue(noStatusS.assertion.isNEB());
+        assertEquals(2.0,noStatusS.difficulty);
+        assertEquals(7,noStatusS.margin);
+        assertNull(noStatusS.status);
+        HashMap<String,Object> status = new HashMap<>();
+        status.put("name","Rip Van Winkle");
+        status.put("age",956);
+        AssertionAndDifficulty hasStatus = new AssertionAndDifficulty(a,3.0,8,status);
+        AssertionAndDifficulty hasStatusS = mapper.readValue(mapper.writeValueAsString(hasStatus), AssertionAndDifficulty.class);
+        assertTrue(hasStatusS.assertion.isNEB());
+        assertEquals(3.0,hasStatusS.difficulty);
+        assertEquals(8,hasStatusS.margin);
+        assertNotNull(hasStatusS.status);
+        assertEquals("Rip Van Winkle",hasStatusS.status.get("name"));
+        assertEquals(Integer.valueOf(956),hasStatusS.status.get("age"));
+    }
 }
