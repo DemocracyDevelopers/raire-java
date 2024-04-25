@@ -13,7 +13,10 @@
 package au.org.democracydevelopers.raire.assertions;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.beans.ConstructorProperties;
+import java.util.Map;
 
 /** Simple tuple like structure that stores an Assertion alongside its difficulty and margin.
  * The difficulty of an assertion is a measure that reflects how much auditing effort is required
@@ -32,10 +35,28 @@ public class AssertionAndDifficulty {
      * the difference in these tallies. */
     public final int margin;
 
-    @ConstructorProperties({"assertion","difficulty","margin"})
+    /** This field is not used by raire-java for computing assertions,
+     * may be useful information for assertion visualisation or information that election administrators would like
+     * to associate with this specific assertion. This field will be created as null by raire-java for efficiency
+     * reasons (rather than containing an empty object). If you want to use it, create an instance with
+     * a non-null value using the constructor. This is useful primarily to people using this data type
+     * in external software to annotate a set of assertions being verified. */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public final Map<String,Object> status;
+
+    /** Backwards compatability constructor not containing status. Use if you don't want any status. */
     public AssertionAndDifficulty(Assertion assertion, double difficulty, int margin) {
         this.assertion = assertion;
         this.difficulty = difficulty;
         this.margin = margin;
+        this.status = null;
+    }
+    /** Use this constructor if status is required. */
+    @ConstructorProperties({"assertion","difficulty","margin","status"})
+    public AssertionAndDifficulty(Assertion assertion, double difficulty, int margin,Map<String,Object> status) {
+        this.assertion = assertion;
+        this.difficulty = difficulty;
+        this.margin = margin;
+        this.status = status;
     }
 }
