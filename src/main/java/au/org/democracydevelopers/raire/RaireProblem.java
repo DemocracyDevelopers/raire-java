@@ -81,7 +81,6 @@ public class RaireProblem {
         else {
             TimeOut timeout = new TimeOut(null,time_limit_seconds);
             try {
-                System.out.println(this.num_candidates);
                 if (this.num_candidates<1) throw new RaireException(new RaireError.InvalidNumberOfCandidates());
                 Votes votes = new Votes(this.votes,this.num_candidates);
                 result=new RaireSolution.RaireResultOrError(new RaireResult(votes,winner,audit,trim_algorithm==null?TrimAlgorithm.MinimizeTree:trim_algorithm,timeout));
