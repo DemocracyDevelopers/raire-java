@@ -41,4 +41,8 @@ A Rust function returning a type `Result<R,E>` will be
 converted to a Java function returning R and possibly throwing
 exception E.
 
+## Execution speed and memory usage
 
+The Java version is a little slower and uses more memory than the Rust version,
+by an amount that is problem specific but on the order of 30%.
+This is primarily due to the language overhead of Java.
