@@ -1,5 +1,5 @@
 /*
-  Copyright 2024 Democracy Developers
+  Copyright 2024-2025 Democracy Developers
   This is a Java re-implementation of raire-rs https://github.com/DemocracyDevelopers/raire-rs
   It attempts to copy the design, API, and naming as much as possible subject to being idiomatic and efficient Java.
 
