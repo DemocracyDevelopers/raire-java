@@ -1,5 +1,5 @@
 /*
-  Copyright 2023 Democracy Developers
+  Copyright 2023-2025 Democracy Developers
   This is a Java re-implementation of raire-rs https://github.com/DemocracyDevelopers/raire-rs
   It attempts to copy the design, API, and naming as much as possible subject to being idiomatic and efficient Java.
 
@@ -21,11 +21,17 @@ import java.util.HashMap;
 /**
  * A utility class for building an array of Vote[] structures
  * from provided preference lists. The main purpose is to convert
- * a large number of weight votes, possibly the same, into a
+ * a large number of ballot papers, possibly not unique, into a
  * set of unique votes with multiplicities.
  *
  * It is also (optionally) capable of converting a preference list of
  * strings into the array of integer preferences used by Raire.
+ *
+ * Typical use:
+ * First make an instance.
+ * Second loop over all ballot papers, adding each ballot with the addVote() function.
+ * Third call getVotes() to get the unique votes with multiplicities suitable for use in raire-java.
+ *
  */
 public class VoteConsolidator {
     /** The map from candidate names to indices. The argument should never be null */
@@ -34,9 +40,9 @@ public class VoteConsolidator {
     /** The thing being built up. The key is a preference list, the argument is a non-null multiplicity */
     private final HashMap<HashableIntArray,Integer> multiplicityByPreferenceList = new HashMap<>();
 
-    /** Use this constructor if you are providing preference lists as an array of integers */
+    /** Use this constructor if you are providing preference lists as an array of 0 based consecutive integers */
     public VoteConsolidator() {}
-    /** Use this constructor if you are providing preference lists as an array of integers */
+    /** Use this constructor if you are providing preference lists as an array of Strings */
     public VoteConsolidator(String[] candidateNames) {
         for (int i=0;i<candidateNames.length;i++) candidateNameToIndex.put(candidateNames[i],i);
     }

@@ -8,9 +8,14 @@ valid for raire-java.
 
 ## Entry point
 
+The expectation is that this will generally be used as a library.
+
 The main entry point is the constructor for `au.org.democracydevelopers.raire.algorithm.RaireResult`
 which will either return a valid result or throw a RaireException. Alternatively, one can make
 a `au.org.democracydevelopers.raire.RaireProblem` object, and call the `solve` method on it.
+
+There is also a minor utility at `au.org.democracydevelopers.raire.util.VoteConsolidator`
+that can help convert a list of ballots into the with-multiplicity format used here.
 
 ## Command line
 
@@ -30,11 +35,9 @@ E.g.
 java -jar target/raire-java-1.0-SNAPSHOT-jar-with-dependencies.jar ../raire-rs/WebContent/example_input/a_guide_to_RAIRE_eg_guide.json 
 ```
 
-
-
 ## Copyright
 
-This program is Copyright 2023-2024 Democracy Developers.
+This program is Copyright 2023-2025 Democracy Developers.
 It is based on software (c) Michelle Blom in C++ https://github.com/michelleblom/audit-irv-cp/tree/raire-branch
 
 This file is part of raire-java.

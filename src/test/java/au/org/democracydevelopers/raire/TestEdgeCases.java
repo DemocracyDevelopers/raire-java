@@ -1,5 +1,5 @@
 /*
-  Copyright 2024 Democracy Developers
+  Copyright 2024-2025 Democracy Developers
   This is a Java re-implementation of raire-rs https://github.com/DemocracyDevelopers/raire-rs
   It attempts to copy the design, API, and naming as much as possible subject to being idiomatic and efficient Java.
 
@@ -40,6 +40,21 @@ public class TestEdgeCases {
     @Test
     void test_one_candidate() {
         RaireProblem problem = new RaireProblem(new HashMap<>(),new Vote[0],1,null, new BallotComparisonOneOnDilutedMargin(13500),null,null,null);
+        RaireResult result = problem.solve().solution.Ok;
+        assertNotNull(result);
+        assertEquals(0,result.winner);
+    }
+
+    @Test
+    /** Test 1 candidate with lots of votes, and 100 candidates with one vote each.
+     * This checks the efficient computation of who won when lots of unimportant ties
+     * exist.
+     */
+    void test_efficient_who_wins() {
+        // Run with a time limit of 10.0 seconds. Even on a very slow computer it shouldn't take more than few hundredths of a second.
+        RaireProblem problem = new RaireProblem(new HashMap<>(),new Vote[101],101,0,new BallotComparisonOneOnDilutedMargin(1100),TrimAlgorithm.MinimizeAssertions,null,10.0);
+        problem.votes[0] = new Vote(1000,new int[]{0}); // 1000 votes for candidate 0
+        for (int i=1;i<=100;i++) problem.votes[i] = new Vote(1,new int[]{i}); // 1 vote for each other candidate.
         RaireResult result = problem.solve().solution.Ok;
         assertNotNull(result);
         assertEquals(0,result.winner);
