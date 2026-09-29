@@ -6,4 +6,5 @@
 * 1.0.3 : Improved performance of winner detection in some cases. No API changes.
 * 1.0.4 : Update vulnerable dependency jackson databind
 * 1.0.5 : Update vulnerable dependency jackson databind
+* 1.0.6 : Update vulnerable dependency jackson databind
 
