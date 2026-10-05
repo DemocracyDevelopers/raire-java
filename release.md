@@ -7,4 +7,5 @@
 * 1.0.4 : Update vulnerable dependency jackson databind
 * 1.0.5 : Update vulnerable dependency jackson databind
 * 1.0.6 : Update vulnerable dependency jackson databind
+* 1.0.7 : Update vulnerable dependency jackson databind
 
